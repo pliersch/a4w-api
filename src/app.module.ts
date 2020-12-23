@@ -5,11 +5,16 @@ import { PhotosModule } from './photos/photos.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from './config';
 import { UsersModule } from './users/users.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
     PhotosModule,
     TypeOrmModule.forRoot(config.database),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+    }),
     UsersModule,
   ],
   controllers: [AppController],

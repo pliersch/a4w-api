@@ -45,6 +45,7 @@ export class PhotosController {
   @UseInterceptors(FileInterceptor('image', createMulterStorage()))
   @Post('file')
   uploadFile( @Body() body: Photo, @UploadedFile() file: Express.Multer.File ) {
+    body.fileName = 'http://localhost:3000/' + file.filename;
     // console.log('file', file);
     // console.log('body', body);
     return this.create(body);
