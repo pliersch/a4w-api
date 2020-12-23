@@ -1,10 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity } from 'typeorm';
+import { BaseEntity } from '../../core/entities/base.entity';
 
 @Entity()
-export class Photo {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class Photo extends BaseEntity {
 
   @Column()
-  name: string;
+  fileName: string;
+
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  tags: string[];
 }
