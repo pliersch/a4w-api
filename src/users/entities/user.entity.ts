@@ -5,7 +5,7 @@ import { Column, Entity, UpdateDateColumn } from 'typeorm';
 export class User extends BaseEntity {
 
   @Column({ type: 'varchar', length: 40 })
-  name: string;
+  lastName: string;
 
   @Column({ type: 'varchar', length: 40 })
   givenName: string;

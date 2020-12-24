@@ -5,12 +5,6 @@ export abstract class BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'boolean', default: true })
-  isActive: boolean;
-
-  @Column({ type: 'boolean', default: false })
-  isArchived: boolean;
-
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   createDateTime: Date;
 
@@ -25,6 +19,12 @@ export abstract class BaseEntity {
   @Column({ type: 'varchar', length: 300, nullable: true })
   lastChangedBy: string;
 
-  @Column({ type: 'varchar', length: 300, nullable: true })
-  internalComment: string | null;
+  // @Column({ type: 'varchar', length: 300, nullable: true })
+  // internalComment: string | null;
+
+  // @Column({ type: 'boolean', default: true })
+  // isActive: boolean;
+
+  // @Column({ type: 'boolean', default: false })
+  // isArchived: boolean;
 }

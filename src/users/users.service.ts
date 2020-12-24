@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -10,6 +10,10 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {
+  }
+
+  async login(user: User): Promise<User | undefined> {
+    return await this.userRepository.findOne(findUserByAuthTokenOptions(user));
   }
 
   async create(user: User): Promise<User> {
@@ -36,4 +40,12 @@ export class UsersService {
   // async removeMany(users: User[]) {
   //   return await this.userRepository.remove(users);
   // }
+}
+
+function findUserByAuthTokenOptions(user: User) {
+  console.log('func obj', user.id);
+  return {
+    where:
+      { lastName: user.lastName }
+  };
 }
