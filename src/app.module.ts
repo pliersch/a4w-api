@@ -11,11 +11,11 @@ import { join } from 'path';
 @Module({
   imports: [
     PhotosModule,
+    UsersModule,
     TypeOrmModule.forRoot(config.database),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
     }),
-    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -8,11 +8,7 @@ import { Photo } from './entites/photo.entity';
   imports: [
     TypeOrmModule.forFeature([Photo])
   ],
-  providers: [
-    PhotosService
-  ],
-  controllers: [
-    PhotosController
-  ]
+  providers: [PhotosService],
+  controllers: [PhotosController]
 })
 export class PhotosModule {}
