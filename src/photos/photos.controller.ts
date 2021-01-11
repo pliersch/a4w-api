@@ -13,6 +13,7 @@ export class PhotosController {
 
   @Post()
   async create(@Body() photo: Photo): Promise<Photo> {
+    console.log('id', photo.id);
     return this.photoService.create(photo);
   }
 

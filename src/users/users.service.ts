@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -8,37 +8,36 @@ export class UsersService {
 
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonly repository: Repository<User>,
   ) {
   }
 
   async login(user: User): Promise<User | undefined> {
-    return await this.userRepository.findOne(findUserByAuthTokenOptions(user));
+    return await this.repository.findOne(findUserByAuthTokenOptions(user));
   }
 
   async create(user: User): Promise<User> {
-    return await this.userRepository.save(user);
+    return await this.repository.save(user);
   }
 
   async findAll(): Promise<User[]> {
-    return await this.userRepository.find();
+    return await this.repository.find();
   }
 
   async findOne(id: string): Promise<User> {
-    return await this.userRepository.findOne(id);
+    return await this.repository.findOne(id);
   }
 
   async update(user: User) {
-    return await this.userRepository.update(user.id, user);
+    return await this.repository.update(user.id, user);
   }
 
   async removeOne(id: string) {
-    const user = await this.userRepository.findOne(id);
-    return await this.userRepository.remove(user);
+    return await this.repository.remove(await this.repository.findOne(id));
   }
 
   // async removeMany(users: User[]) {
-  //   return await this.userRepository.remove(users);
+  //   return await this.repository.remove(users);
   // }
 }
 
