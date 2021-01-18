@@ -7,6 +7,6 @@ export class Photo extends BaseEntity {
   @Column()
   fileName: string;
 
-  @Column({ type: 'varchar', length: 300, nullable: true })
+  @Column({ type: 'varchar', nullable: true, array: true })
   tags: string[];
 }

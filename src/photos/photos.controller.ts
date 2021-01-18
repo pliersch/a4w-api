@@ -37,23 +37,17 @@ export class PhotosController {
     return this.photoService.removeOne(id);
   }
 
-
-  // @Delete(':id')
-  // removeMany(@Param('id') id: string) {
-  //   return this.photoService.removeMany(+id);
-  // }
-
+  // body is type 'any' because we must parse the json string :(
   @UseInterceptors(FileInterceptor('image', createMulterStorage()))
   @Post('file')
-  uploadFile( @Body() body: Photo, @UploadedFile() file: Express.Multer.File ) {
-    body.fileName = 'http://localhost:3000/' + file.filename;
-    return this.create(body);
+  uploadFile( @Body() body: any, @UploadedFile() file: Express.Multer.File ) {
+    const photo = {} as Photo;
+    photo.tags = JSON.parse(body.tags);
+    photo.fileName = 'http://localhost:3000/' + file.filename;
+    console.log('photo before save in db', photo);
+    return this.create(photo);
   }
 }
-
-// function createPhotoFromBody(body) {
-//
-// }
 
 function createMulterStorage() {
   return {
