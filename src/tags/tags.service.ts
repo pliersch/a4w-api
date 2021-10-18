@@ -20,17 +20,15 @@ export class TagsService {
     return await this.repository.find();
   }
 
-  async findOne(id: number): Promise<Tag> {
+  async findOne(id: string): Promise<Tag> {
     return await this.repository.findOne(id);
   }
 
   async update(id: string, updateTagDto: UpdateTagDto): Promise<UpdateResult> {
-    console.log('update', id);
-    console.log('update', updateTagDto);
     return await this.repository.update(id, updateTagDto);
   }
 
-  async remove(id: number): Promise<Tag> {
+  async remove(id: string): Promise<Tag> {
     return await this.repository.remove(await this.findOne(id));
   }
 }
