@@ -1,15 +1,5 @@
-import { ConnectionOptions } from 'typeorm';
 import * as path from 'path';
-
-export interface AppConfiguration {
-  serverPort: number;
-  redis?: {
-    host: string,
-    port: number,
-    enabled: boolean | string,
-  };
-  database: ConnectionOptions;
-}
+import {AppConfiguration} from "./config/config";
 
 export const config: AppConfiguration = {
   serverPort: Number(process.env.SERVER_PORT) || 3000,
@@ -23,7 +13,7 @@ export const config: AppConfiguration = {
     host: process.env.POSTGRES_HOST || 'localhost',
     port: Number(process.env.POSTGRES_PORT) || 5432,
     username: process.env.POSTGRES_USER || 'postgres',
-    password: process.env.POSTGRES_PASSWORD || '123456',
+    password: process.env.POSTGRES_PASSWORD || 'Pinscher77',
     database: process.env.POSTGRES_DB || 'a4w',
     entities: [path.resolve(__dirname, '**/*.entity{.ts,.js}')],
     synchronize: true,
