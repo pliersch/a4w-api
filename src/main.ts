@@ -6,7 +6,14 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
         logger: console
     });
-    app.enableCors({credentials: true, origin: 'http://localhost:4200'});
+
+    let origin = 'http://localhost:4200';
+
+    if (process.env.NODE_ENV === 'production') {
+        origin = 'http://localhost:4300';
+    }
+
+    app.enableCors({credentials: true, origin: origin});
 
     const options = new DocumentBuilder()
         .setTitle('a4w-api')
