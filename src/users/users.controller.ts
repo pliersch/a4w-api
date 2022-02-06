@@ -5,33 +5,35 @@ import {User} from './entities/user.entity';
 @Controller('users')
 export class UsersController {
 
-    private readonly logger = new Logger(UsersController.name);
+  private readonly logger = new Logger(UsersController.name);
 
-    constructor(private readonly usersService: UsersService) {
-    }
+  constructor(private readonly usersService: UsersService) {
+  }
 
-    @Post()
-    create(@Body() user: User) {
-        return this.usersService.create(user);
-    }
+  @Post()
+  create(@Body() user: User) {
+    return this.usersService.create(user);
+  }
 
-    @Post('login')
-    login(@Body() user: User) {
-        return this.usersService.login(user);
-    }
+  @Post('login')
+  login(@Body() user: User) {
+    console.log(user)
+    return this.usersService.login(user);
+  }
 
-    @Get()
-    findAll() {
-        return this.usersService.findAll();
-    }
+  @Get()
+  findAll() {
+    return this.usersService.findAll();
+  }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.usersService.findOne(id);
-    }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOne(id);
+  }
 
-    @Put(':id')
-    update(@Param('id') id: string, @Body() user: User) {
-        return this.usersService.update(/*id,*/ user);
-    }
+  @Put(':id')
+  update(@Param('id') id: string, @Body() user: User) {
+    return this.usersService.update(/*id,*/ user);
+  }
 }
+
