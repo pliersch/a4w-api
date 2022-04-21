@@ -10,6 +10,7 @@ import {UsersModule} from './users/users.module';
 import {ChatModule} from './chat/chat.module';
 import {TagsModule} from './tags/tags.module';
 import * as configuration from "./config/config.develop";
+import {SharpModule} from "nestjs-sharp";
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import * as configuration from "./config/config.develop";
     UsersModule,
     ChatModule,
     TagsModule,
+    SharpModule,
     // ConfigModule.forRoot({load: [foo()]}),
     TypeOrmModule.forRoot(config.database),
     ServeStaticModule.forRoot({

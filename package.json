@@ -22,7 +22,6 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@angular/material-moment-adapter": "^11.2.13",
     "@nestjs/common": "^7.6.18",
     "@nestjs/config": "^1.1.0",
     "@nestjs/core": "^7.6.18",
@@ -31,10 +30,12 @@
     "@nestjs/swagger": "^4.8.2",
     "@nestjs/typeorm": "^7.1.5",
     "cross-env": "^7.0.3",
+    "nestjs-sharp": "^1.1.0",
     "pg": "^8.7.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.7",
+    "sharp": "^0.30.4",
     "swagger-ui-express": "^4.1.6",
     "typeorm": "^0.2.38"
   },
