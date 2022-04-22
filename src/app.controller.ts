@@ -9,37 +9,35 @@ import * as path from 'path';
 @Controller()
 export class AppController {
 
+  private sizes: number[] = [300, 600];
+
   constructor(private readonly appService: AppService,
               private sharpService: SharpService) {
     // console.log('env: ', process.env.NODE_ENV)
 
-    this.foo(
+    this.createThumbs(
       path.resolve('./static/images/gallery/full'),
-      path.resolve('./static/images/gallery/thumbs'))
+      path.resolve('./static/images/gallery/thumbs'),
+      this.sizes)
       .then(r => console.log(r));
   }
 
-  async foo(inputPath: string, outputPath: string) {
+  async createThumbs(inputPath: string, outputPath: string, sizes: number[]) {
     try {
       const files = await fs.promises.readdir(inputPath);
+      console.log(files)
       for (const file of files) {
         const fromPath = path.join(inputPath, file);
-        const webpFile = path.basename(file, path.extname(file)) + '.webp';
-        const toPath = path.join(outputPath, webpFile);
-
         const stat = await fs.promises.stat(fromPath);
-
         if (stat.isFile()) {
-          console.log("'%s' is a file.", fromPath);
-        } else if (stat.isDirectory()) {
-          console.log("'%s' is a directory.", fromPath);
+          for (const size of sizes) {
+            const webpFile = path.basename(file, path.extname(file)) + '-' + size + '.webp';
+            const toPath = path.join(outputPath, webpFile);
+            await this.generate(fromPath, toPath, size)
+          }
         }
-
-        await this.generate(fromPath, toPath)
-        console.log("Moved '%s'->'%s'", fromPath, toPath);
       }
     } catch (e) {
-      // Catch anything bad that happens
       console.error("We've thrown! Whoops!", e);
     }
   }
@@ -56,28 +54,12 @@ export class AppController {
     );
   }
 
-  async generate(inputPath: string, outputPath: string): Promise<void> {
+  async generate(inputPath: string, outputPath: string, width: number): Promise<void> {
     await this.sharpService.edit(inputPath)
-      .resize(320)
+      .resize(width)
       .toFile(outputPath, (err, info) => {
         if (err) {
           console.log('AppController gen err: ', err)
-        }
-        // if (info) {
-        //   console.log('AppController gen: yes', info)
-        // }
-      });
-  }
-
-  async generate2(fileName: string, path: string, fileType: string): Promise<void> {
-    await this.sharpService.edit(path + '/' + fileName + '.' + fileType)
-      .resize(320)
-      .toFile(path + '/' + fileName + '.' + fileType, (err, info) => {
-        if (err) {
-          console.log('AppController gen err: ', err)
-        }
-        if (info) {
-          console.log('AppController gen: yes', info)
         }
       });
   }
