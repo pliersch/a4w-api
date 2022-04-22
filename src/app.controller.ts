@@ -4,33 +4,19 @@ import {interval, Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {SharpService} from "nestjs-sharp";
 import * as fs from "fs";
-import {PathLike} from "fs";
 import * as path from 'path';
 
 @Controller()
 export class AppController {
-  private moveFrom: PathLike = '/uploads';
 
   constructor(private readonly appService: AppService,
               private sharpService: SharpService) {
     // console.log('env: ', process.env.NODE_ENV)
-    // console.log(this.listDir(path.resolve('./uploads')).then(console.log))
 
     this.foo(
-      path.resolve('./uploads'),
-      path.resolve('./thumbs'))
+      path.resolve('./static/images/gallery/full'),
+      path.resolve('./static/images/gallery/thumbs'))
       .then(r => console.log(r));
-
-    // void this.generate('uploads/image-1608753157569.jpg', 'uploads/output.webp')
-  }
-
-  async listDir(s: string): Promise<string[]> {
-    console.log(s)
-    try {
-      return fs.promises.readdir(s);
-    } catch (err) {
-      console.error('Error occurred while reading directory!', err);
-    }
   }
 
   async foo(inputPath: string, outputPath: string) {
@@ -50,17 +36,12 @@ export class AppController {
         }
 
         await this.generate(fromPath, toPath)
-        // Now move async
-        // await fs.promises.rename(fromPath, toPath);
-
-        // Log because we're crazy
         console.log("Moved '%s'->'%s'", fromPath, toPath);
       }
     } catch (e) {
       // Catch anything bad that happens
       console.error("We've thrown! Whoops!", e);
     }
-
   }
 
   @Get()

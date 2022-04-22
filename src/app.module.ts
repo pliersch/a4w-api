@@ -22,7 +22,7 @@ import {SharpModule} from "nestjs-sharp";
     // ConfigModule.forRoot({load: [foo()]}),
     TypeOrmModule.forRoot(config.database),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'),
+      rootPath: join(__dirname, '..', 'static'),
     }),
   ],
   controllers: [AppController],
