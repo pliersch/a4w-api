@@ -30,6 +30,7 @@
     "@nestjs/swagger": "^4.8.2",
     "@nestjs/typeorm": "^7.1.5",
     "cross-env": "^7.0.3",
+    "jszip": "^3.9.1",
     "nestjs-sharp": "^1.1.0",
     "pg": "^8.7.1",
     "reflect-metadata": "^0.1.13",
