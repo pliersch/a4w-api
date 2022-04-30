@@ -1,9 +1,23 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseInterceptors} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  StreamableFile,
+  Response,
+  UploadedFile,
+  UseInterceptors
+} from '@nestjs/common';
 import {PhotosService} from './photos.service';
 import {Photo} from './entites/photo.entity';
 import {FileInterceptor} from '@nestjs/platform-express';
 import {Express} from 'express';
 import {diskStorage} from 'multer';
+import {createReadStream} from "fs";
+import {join} from "path";
 
 @Controller('photos')
 export class PhotosController {
@@ -44,9 +58,10 @@ export class PhotosController {
     const photo = {} as Photo;
     photo.tags = JSON.parse(body.tags);
     photo.fileName = 'http://localhost:3000/' + file.filename;
-    console.log('photo before save in db', photo);
+    console.log('photo before save', photo);
     return this.create(photo);
   }
+
 }
 
 function createMulterStorage() {

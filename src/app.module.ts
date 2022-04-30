@@ -5,6 +5,7 @@ import {AppController} from './app.controller';
 import {AppService} from './app.service';
 import {config} from './config';
 import {join} from 'path';
+import {DownloadModule} from './download/download.module';
 import {PhotosModule} from './photos/photos.module';
 import {UsersModule} from './users/users.module';
 import {ChatModule} from './chat/chat.module';
@@ -18,8 +19,9 @@ import {SharpModule} from "nestjs-sharp";
     UsersModule,
     ChatModule,
     TagsModule,
-    SharpModule,
+    DownloadModule,
     // ConfigModule.forRoot({load: [foo()]}),
+    SharpModule,
     TypeOrmModule.forRoot(config.database),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'static'),
