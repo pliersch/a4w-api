@@ -9,7 +9,7 @@ import {
   StreamableFile,
   Response,
   UploadedFile,
-  UseInterceptors
+  UseInterceptors, Patch
 } from '@nestjs/common';
 import {PhotosService} from './photos.service';
 import {Photo} from './entites/photo.entity';
@@ -18,6 +18,7 @@ import {Express} from 'express';
 import {diskStorage} from 'multer';
 import {createReadStream} from "fs";
 import {join} from "path";
+import {UpdatePhotoDto} from "./dto/update-photo.dto";
 
 @Controller('photos')
 export class PhotosController {
@@ -42,8 +43,13 @@ export class PhotosController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() photo: Photo) {
-    return this.photoService.update(/*+id, */photo);
+  replace(@Param('id') id: string, @Body() photo: Photo) {
+    return this.photoService.replace(/*+id, */photo);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() dto: UpdatePhotoDto) {
+    return this.photoService.update(id, dto);
   }
 
   @Delete(':id')
