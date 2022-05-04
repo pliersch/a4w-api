@@ -1,10 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { TagsService } from './tags.service';
-import { CreateTagDto } from './dto/create-tag.dto';
-import { UpdateTagDto } from './dto/update-tag.dto';
-import { Tag } from './entities/tag.entity';
-import { UpdateResult } from 'typeorm';
-import { RemoteUpdateTag } from './dto/remote-update-tag';
+import {Body, Controller, Delete, Get, Param, Patch, Post} from '@nestjs/common';
+import {TagsService} from './tags.service';
+import {CreateTagDto} from './dto/create-tag.dto';
+import {Tag} from './entities/tag.entity';
+import {UpdateResult} from 'typeorm';
+import {UpdateTagDto} from "./dto/update-tag.dto";
 
 @Controller('tags')
 export class TagsController {
@@ -26,9 +25,10 @@ export class TagsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() update: RemoteUpdateTag): Promise<UpdateResult> {
+  update(@Param('id') id: string, @Body() update: UpdateTagDto): Promise<UpdateResult> {
+    console.log(id, update)
     const updateTagDto = {
-      entries: update.changes.entries
+      entries: update.entries
     }
     return this.tagsService.update(id, updateTagDto);
   }
