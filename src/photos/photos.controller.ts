@@ -1,34 +1,22 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  StreamableFile,
-  Response,
-  UploadedFile,
-  UseInterceptors, Patch
-} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Patch, Post, Put, UploadedFile, UseInterceptors} from '@nestjs/common';
 import {PhotosService} from './photos.service';
 import {Photo} from './entites/photo.entity';
 import {FileInterceptor} from '@nestjs/platform-express';
 import {Express} from 'express';
 import {diskStorage} from 'multer';
-import {createReadStream} from "fs";
-import {join} from "path";
 import {UpdatePhotoDto} from "./dto/update-photo.dto";
+import {PhotoProcessorService} from "./photo-processor.service";
+import * as path from "path";
 
 @Controller('photos')
 export class PhotosController {
 
-  constructor(private photoService: PhotosService) {
+  constructor(private photoService: PhotosService,
+              private photoProcessor: PhotoProcessorService) {
   }
 
   @Post()
   async create(@Body() photo: Photo): Promise<Photo> {
-    console.log('id', photo.id);
     return this.photoService.create(photo);
   }
 
@@ -63,7 +51,8 @@ export class PhotosController {
   uploadFile(@Body() body: any, @UploadedFile() file: Express.Multer.File) {
     const photo = {} as Photo;
     photo.tags = JSON.parse(body.tags);
-    photo.fileName = 'http://localhost:3000/' + file.filename;
+    photo.fileName = file.filename;
+    this.photoProcessor.createThumb(photo.fileName);
     console.log('photo before save', photo);
     return this.create(photo);
   }
@@ -73,8 +62,9 @@ export class PhotosController {
 function createMulterStorage() {
   return {
     storage: diskStorage({
-      destination: './uploads',
+      destination: './static/images/gallery/full',
       filename: function (req, file, cb) {
+        console.log(' filename: ',)
         const extension = file.originalname.substring(file.originalname.lastIndexOf('.'))
         cb(null, file.fieldname + '-' + Date.now() + extension)
       }
