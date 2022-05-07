@@ -6,7 +6,6 @@ import {Express} from 'express';
 import {diskStorage} from 'multer';
 import {UpdatePhotoDto} from "./dto/update-photo.dto";
 import {PhotoProcessorService} from "./photo-processor.service";
-import * as path from "path";
 
 @Controller('photos')
 export class PhotosController {

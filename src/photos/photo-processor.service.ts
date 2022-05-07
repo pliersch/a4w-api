@@ -11,15 +11,14 @@ export class PhotoProcessorService {
   private readonly defaultOutput = path.resolve('./static/images/gallery/thumbs')
 
   constructor(private sharpService: SharpService) {
-    this.createThumbs(
-      path.resolve('./static/images/gallery/full'),
-      path.resolve('./static/images/gallery/thumbs'),
-      this.sizes)
-      .then(r => console.log(r));
+    //   this.createThumbs(
+    //     path.resolve('./static/images/gallery/full'),
+    //     path.resolve('./static/images/gallery/thumbs'),
+    //     this.sizes)
+    //     .then(r => console.log(r));
   }
 
-  async createThumb(fileName: string, inputDirectory?: string, outputDirectory?: string, resolutions?: number[]): Promise<void> {
-    console.log('PhotoProcessorService createThumb file IN: ', fileName)
+  async createThumb(fileName: string, inputDirectory?: string, outputDirectory?: string, resolutions?: number[]): Promise<number> {
     const promises = [];
     const input = inputDirectory ? inputDirectory + fileName : this.defaultInput;
     const output = outputDirectory ? outputDirectory : this.defaultOutput;
@@ -29,8 +28,8 @@ export class PhotoProcessorService {
         const webpFile = path.basename(fileName, path.extname(fileName)) + '-' + size + '.webp';
         const toPath = path.join(output, webpFile);
         const fromPath = path.join(input, fileName);
-        // promises.push(this.generate(fileName, toPath, size));
-        await this.generate(fromPath, toPath, size);
+        promises.push(this.generate(fromPath, toPath, size));
+        // await this.generate(fromPath, toPath, size);
       }
     } catch (e) {
       console.error("We've thrown! Whoops!", e);
@@ -38,13 +37,15 @@ export class PhotoProcessorService {
     Promise.all(promises)
       .then(() => {
         console.log('PhotosProcessor : YEAH',)
+        return 1;
       })
       .catch((e) => {
         console.log('PhotosProcessor error: ',)
       });
+    return 42;
   }
 
-  async createThumbs(inputDirectory?: string, outputDirectory?: string, sizes?: number[]) {
+  async createThumbsByFolder(inputDirectory?: string, outputDirectory?: string, sizes?: number[]) {
     try {
       const input = inputDirectory ? inputDirectory : this.defaultInput;
       const output = outputDirectory ? outputDirectory : this.defaultOutput;
