@@ -6,6 +6,7 @@ import {Express} from 'express';
 import {diskStorage} from 'multer';
 import {UpdatePhotoDto} from "./dto/update-photo.dto";
 import {PhotoProcessorService} from "./photo-processor.service";
+import {DeletePhotoResultDto} from "./dto/delete-photo-result.dto";
 
 @Controller('photos')
 export class PhotosController {
@@ -40,7 +41,7 @@ export class PhotosController {
   }
 
   @Delete(':id')
-  removeOne(@Param('id') id: string) {
+  removeOne(@Param('id') id: string): Promise<DeletePhotoResultDto> {
     return this.photoService.removeOne(id);
   }
 
@@ -52,7 +53,6 @@ export class PhotosController {
     photo.tags = JSON.parse(body.tags);
     photo.fileName = file.filename;
     this.photoProcessor.createThumb(photo.fileName);
-    console.log('photo before save', photo);
     return this.create(photo);
   }
 
@@ -63,7 +63,6 @@ function createMulterStorage() {
     storage: diskStorage({
       destination: './static/images/gallery/full',
       filename: function (req, file, cb) {
-        console.log(' filename: ',)
         const extension = file.originalname.substring(file.originalname.lastIndexOf('.'))
         cb(null, file.fieldname + '-' + Date.now() + extension)
       }

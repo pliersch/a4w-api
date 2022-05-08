@@ -42,7 +42,7 @@ export class UsersService {
 }
 
 function findUserByAuthTokenOptions(user: User) {
-  console.log('func obj', user.id);
+  // console.log('func obj', user.id);
   return {
     where:
       {lastName: user.lastName}

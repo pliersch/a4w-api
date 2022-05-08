@@ -3,6 +3,7 @@ import {Repository} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Photo} from './entites/photo.entity';
 import {UpdatePhotoDto} from "./dto/update-photo.dto";
+import {DeletePhotoResultDto} from "./dto/delete-photo-result.dto";
 
 @Injectable()
 export class PhotosService {
@@ -34,9 +35,15 @@ export class PhotosService {
     return await this.photoRepository.update(id, dto);
   }
 
-  async removeOne(id: string) {
+  async removeOne(id: string): Promise<DeletePhotoResultDto> {
     const photo = await this.photoRepository.findOne(id);
-    return await this.photoRepository.remove(photo);
+    const photo1 = await this.photoRepository.remove(photo);
+    const res: string = photo1 ? id : null;
+    console.log('PhotosService removeOne: ', res)
+    return new Promise(function (resolve) {
+      resolve({id: res});
+    });
+
   }
 
   // async removeMany(photos: Photo[]) {
