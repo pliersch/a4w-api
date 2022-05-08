@@ -62,13 +62,11 @@ export class PhotoProcessorService {
         }
       }
     } catch (e) {
-      console.error("We've thrown! Whoops!", e);
+      console.log('PhotoProcessorService createThumbsByFolder error: ', e);
     }
   }
 
   async generate(inputPath: string, outputPath: string, width: number): Promise<void> {
-    console.log('PhotoProcessorService generate: in: ', inputPath)
-    console.log('PhotoProcessorService generate: out: ', outputPath)
     await this.sharpService.edit(inputPath)
       .resize(width)
       .toFile(outputPath, (err, info) => {
