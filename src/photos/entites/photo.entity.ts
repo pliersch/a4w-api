@@ -1,5 +1,5 @@
-import { Column, Entity } from 'typeorm';
-import { BaseEntity } from '../../core/entities/base.entity';
+import {Column, Entity} from 'typeorm';
+import {BaseEntity} from "../../common/entities/base.entity";
 
 @Entity()
 export class Photo extends BaseEntity {
@@ -7,6 +7,6 @@ export class Photo extends BaseEntity {
   @Column()
   fileName: string;
 
-  @Column({ type: 'varchar', nullable: true, array: true })
+  @Column({type: 'varchar', nullable: true, array: true})
   tags: string[];
 }

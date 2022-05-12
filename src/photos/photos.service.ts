@@ -1,9 +1,12 @@
-import {Injectable} from '@nestjs/common';
-import {Repository} from 'typeorm';
-import {InjectRepository} from '@nestjs/typeorm';
-import {Photo} from './entites/photo.entity';
-import {UpdatePhotoDto} from "./dto/update-photo.dto";
-import {DeletePhotoResultDto} from "./dto/delete-photo-result.dto";
+import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Photo } from './entites/photo.entity';
+import { UpdatePhotoDto } from "./dto/update-photo.dto";
+import { DeletePhotoResultDto } from "./dto/delete-photo-result.dto";
+import { PageOptionsDto } from "../common/dtos/page-options.dto";
+import { PageDto } from "../common/dtos/page.dto";
+import { PageMetaDto } from "../common/dtos/page-meta.dto";
 
 @Injectable()
 export class PhotosService {
@@ -20,6 +23,25 @@ export class PhotosService {
 
   async findAll(): Promise<Photo[]> {
     return await this.photoRepository.find();
+  }
+
+  async getPhotos(pageOptionsDto: PageOptionsDto): Promise<PageDto<Photo>> {
+    console.log('PhotosService getPhotos: ', pageOptionsDto)
+    const queryBuilder = this.photoRepository.createQueryBuilder('photos');
+
+    queryBuilder
+      .orderBy('photos.createDateTime', pageOptionsDto.order)
+      .skip(pageOptionsDto.skip)
+      .take(pageOptionsDto.take);
+
+    const itemCount = await queryBuilder.getCount();
+    const {entities} = await queryBuilder.getRawAndEntities();
+
+    const pageMetaDto = new PageMetaDto({itemCount, pageOptionsDto});
+
+    console.log('PhotosService getPhotos: ', entities, pageMetaDto)
+
+    return new PageDto(entities, pageMetaDto);
   }
 
   async findOne(id: string): Promise<Photo> {

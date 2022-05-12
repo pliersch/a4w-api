@@ -1,12 +1,29 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post, Put, UploadedFile, UseInterceptors} from '@nestjs/common';
-import {PhotosService} from './photos.service';
-import {Photo} from './entites/photo.entity';
-import {FileInterceptor} from '@nestjs/platform-express';
-import {Express} from 'express';
-import {diskStorage} from 'multer';
-import {UpdatePhotoDto} from "./dto/update-photo.dto";
-import {PhotoProcessorService} from "./photo-processor.service";
-import {DeletePhotoResultDto} from "./dto/delete-photo-result.dto";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Query,
+  UploadedFile,
+  UseInterceptors
+} from '@nestjs/common';
+import { PhotosService } from './photos.service';
+import { Photo } from './entites/photo.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Express } from 'express';
+import { diskStorage } from 'multer';
+import { UpdatePhotoDto } from "./dto/update-photo.dto";
+import { PhotoProcessorService } from "./photo-processor.service";
+import { DeletePhotoResultDto } from "./dto/delete-photo-result.dto";
+import { PageOptionsDto } from "../common/dtos/page-options.dto";
+import { PageDto } from "../common/dtos/page.dto";
+
+class UserDto {
+}
 
 @Controller('photos')
 export class PhotosController {
@@ -20,9 +37,14 @@ export class PhotosController {
     return this.photoService.create(photo);
   }
 
+  // @Get()
+  // async findAll(): Promise<Photo[]> {
+  //   return this.photoService.findAll();
+  // }
+
   @Get()
-  async findAll(): Promise<Photo[]> {
-    return this.photoService.findAll();
+  async getPhotos(@Query() pageOptionsDto: PageOptionsDto): Promise<PageDto<UserDto>> {
+    return this.photoService.getPhotos(pageOptionsDto);
   }
 
   @Get(':id')
