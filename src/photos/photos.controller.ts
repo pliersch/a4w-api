@@ -21,6 +21,7 @@ import { PhotoProcessorService } from "./photo-processor.service";
 import { DeletePhotoResultDto } from "./dto/delete-photo-result.dto";
 import { PageOptionsDto } from "../common/dtos/page-options.dto";
 import { PageDto } from "../common/dtos/page.dto";
+import { PhotoMetaDataDto } from "./dto/photo-meta-data-result.dto";
 
 class UserDto {
 }
@@ -37,10 +38,10 @@ export class PhotosController {
     return this.photoService.create(photo);
   }
 
-  // @Get()
-  // async findAll(): Promise<Photo[]> {
-  //   return this.photoService.findAll();
-  // }
+  @Get('meta')
+  async getMetaData(): Promise<PhotoMetaDataDto> {
+    return this.photoService.getMetaData();
+  }
 
   @Get()
   async getPhotos(@Query() pageOptionsDto: PageOptionsDto): Promise<PageDto<UserDto>> {

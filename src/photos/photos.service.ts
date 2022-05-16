@@ -7,6 +7,7 @@ import { DeletePhotoResultDto } from "./dto/delete-photo-result.dto";
 import { PageOptionsDto } from "../common/dtos/page-options.dto";
 import { PageDto } from "../common/dtos/page.dto";
 import { PageMetaDto } from "../common/dtos/page-meta.dto";
+import { PhotoMetaDataDto } from "./dto/photo-meta-data-result.dto";
 
 @Injectable()
 export class PhotosService {
@@ -21,25 +22,22 @@ export class PhotosService {
     return await this.photoRepository.save(photo);
   }
 
-  async findAll(): Promise<Photo[]> {
-    return await this.photoRepository.find();
+  async getMetaData(): Promise<PhotoMetaDataDto> {
+    const number = await this.photoRepository.count();
+    return new PhotoMetaDataDto(number)
   }
 
   async getPhotos(pageOptionsDto: PageOptionsDto): Promise<PageDto<Photo>> {
-    console.log('PhotosService getPhotos: ', pageOptionsDto)
     const queryBuilder = this.photoRepository.createQueryBuilder('photos');
-
+    const skip = (pageOptionsDto.page - 1) * pageOptionsDto.take;
     queryBuilder
       .orderBy('photos.createDateTime', pageOptionsDto.order)
-      .skip(pageOptionsDto.skip)
+      .skip((pageOptionsDto.page - 1) * pageOptionsDto.take)
       .take(pageOptionsDto.take);
 
     const itemCount = await queryBuilder.getCount();
     const {entities} = await queryBuilder.getRawAndEntities();
-
     const pageMetaDto = new PageMetaDto({itemCount, pageOptionsDto});
-
-    console.log('PhotosService getPhotos: ', entities, pageMetaDto)
 
     return new PageDto(entities, pageMetaDto);
   }
@@ -53,7 +51,6 @@ export class PhotosService {
   }
 
   async update(id: string, dto: UpdatePhotoDto) {
-    console.log(id, dto)
     return await this.photoRepository.update(id, dto);
   }
 
@@ -61,7 +58,6 @@ export class PhotosService {
     const photo = await this.photoRepository.findOne(id);
     const photo1 = await this.photoRepository.remove(photo);
     const res: string = photo1 ? id : null;
-    console.log('PhotosService removeOne: ', res)
     return new Promise(function (resolve) {
       resolve({id: res});
     });
