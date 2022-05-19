@@ -20,11 +20,8 @@ import { UpdatePhotoDto } from "./dto/update-photo.dto";
 import { PhotoProcessorService } from "./photo-processor.service";
 import { DeletePhotoResultDto } from "./dto/delete-photo-result.dto";
 import { PageOptionsDto } from "../common/dtos/page-options.dto";
-import { PageDto } from "../common/dtos/page.dto";
 import { PhotoMetaDataDto } from "./dto/photo-meta-data-result.dto";
-
-class UserDto {
-}
+import { PhotosResultDto } from "./dto/photos-result.dto";
 
 @Controller('photos')
 export class PhotosController {
@@ -44,7 +41,7 @@ export class PhotosController {
   }
 
   @Get()
-  async getPhotos(@Query() pageOptionsDto: PageOptionsDto): Promise<PageDto<UserDto>> {
+  async getPhotos(@Query() pageOptionsDto: PageOptionsDto): Promise<PhotosResultDto> {
     return this.photoService.getPhotos(pageOptionsDto);
   }
 

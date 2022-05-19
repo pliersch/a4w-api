@@ -4,10 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Photo } from './entites/photo.entity';
 import { UpdatePhotoDto } from "./dto/update-photo.dto";
 import { DeletePhotoResultDto } from "./dto/delete-photo-result.dto";
-import { PageOptionsDto } from "../common/dtos/page-options.dto";
-import { PageDto } from "../common/dtos/page.dto";
-import { PageMetaDto } from "../common/dtos/page-meta.dto";
 import { PhotoMetaDataDto } from "./dto/photo-meta-data-result.dto";
+import { PhotosResultDto } from "./dto/photos-result.dto";
+import { PhotosRequestDto } from "./dto/photos.request.dto";
 
 @Injectable()
 export class PhotosService {
@@ -27,19 +26,17 @@ export class PhotosService {
     return new PhotoMetaDataDto(number)
   }
 
-  async getPhotos(pageOptionsDto: PageOptionsDto): Promise<PageDto<Photo>> {
+  async getPhotos(pageOptionsDto: PhotosRequestDto): Promise<PhotosResultDto> {
+    console.log('PhotosService getPhotos: ', pageOptionsDto)
     const queryBuilder = this.photoRepository.createQueryBuilder('photos');
-    const skip = (pageOptionsDto.page - 1) * pageOptionsDto.take;
     queryBuilder
       .orderBy('photos.createDateTime', pageOptionsDto.order)
-      .skip((pageOptionsDto.page - 1) * pageOptionsDto.take)
+      .skip(pageOptionsDto.from)
       .take(pageOptionsDto.take);
 
-    const itemCount = await queryBuilder.getCount();
     const {entities} = await queryBuilder.getRawAndEntities();
-    const pageMetaDto = new PageMetaDto({itemCount, pageOptionsDto});
-
-    return new PageDto(entities, pageMetaDto);
+    const count = await this.photoRepository.count();
+    return {photos: entities, availablePhotos: count};
   }
 
   async findOne(id: string): Promise<Photo> {
