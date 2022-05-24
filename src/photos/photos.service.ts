@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Photo } from './entites/photo.entity';
 import { UpdatePhotoDto } from "./dto/update-photo.dto";
@@ -52,9 +52,11 @@ export class PhotosService {
   }
 
   async removeOne(id: string): Promise<DeletePhotoResultDto> {
-    const photo = await this.photoRepository.findOne(id);
-    const photo1 = await this.photoRepository.remove(photo);
-    const res: string = photo1 ? id : null;
+    // const photo = await this.photoRepository.findOne(id);
+    // const deleteResult = await this.photoRepository.remove(photo);
+    const deleteResult: DeleteResult = await this.photoRepository.delete(id);
+    console.log('PhotosService removeOne: ', deleteResult)
+    const res: string = deleteResult.affected == 1 ? id : null;
     return new Promise(function (resolve) {
       resolve({id: res});
     });

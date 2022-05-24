@@ -30,6 +30,7 @@ export class PhotosController {
               private photoProcessor: PhotoProcessorService) {
   }
 
+  // only used with upload
   @Post()
   async create(@Body() photo: Photo): Promise<Photo> {
     return this.photoService.create(photo);
@@ -51,28 +52,30 @@ export class PhotosController {
   }
 
   @Put(':id')
-  replace(@Param('id') id: string, @Body() photo: Photo) {
+  async replace(@Param('id') id: string, @Body() photo: Photo) {
     return this.photoService.replace(/*+id, */photo);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdatePhotoDto) {
+  async update(@Param('id') id: string, @Body() dto: UpdatePhotoDto) {
     return this.photoService.update(id, dto);
   }
 
   @Delete(':id')
-  removeOne(@Param('id') id: string): Promise<DeletePhotoResultDto> {
+  async removeOne(@Param('id') id: string): Promise<DeletePhotoResultDto> {
     return this.photoService.removeOne(id);
   }
 
   // body is type 'any' because we must parse the json string :(
   @UseInterceptors(FileInterceptor('image', createMulterStorage()))
   @Post('file')
-  uploadFile(@Body() body: any, @UploadedFile() file: Express.Multer.File) {
+  async uploadFile(@Body() body: any, @UploadedFile() file: Express.Multer.File) {
     const photo = {} as Photo;
     photo.tags = JSON.parse(body.tags);
+    photo.recordDate = JSON.parse(body.created);
+    // console.log('PhotosController uploadFile: ', JSON.parse(body.created))
     photo.fileName = file.filename;
-    this.photoProcessor.createThumb(photo.fileName);
+    await this.photoProcessor.createThumb(photo.fileName);
     return this.create(photo);
   }
 
