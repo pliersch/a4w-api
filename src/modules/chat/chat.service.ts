@@ -1,11 +1,12 @@
-import {Body, Injectable, Post, UploadedFile, UseInterceptors} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
+import { Body, Injectable, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
-import {Repository, UpdateResult} from 'typeorm';
-import {Message} from './message.entity';
-import {FileInterceptor} from "@nestjs/platform-express";
-import {Express} from "express";
-import {diskStorage} from "multer";
+import { Repository, UpdateResult } from 'typeorm';
+import { Message } from './message.entity';
+import { FileInterceptor } from "@nestjs/platform-express";
+import { Express } from "express";
+import { diskStorage } from "multer";
+import { Photo } from "@modules/photos/entites/photo.entity";
 
 
 @Injectable()
@@ -41,16 +42,16 @@ export class ChatService {
   // body is type 'any' because we must parse the json string :(
   @UseInterceptors(FileInterceptor('image', createMulterStorage()))
   @Post('file')
-  // @ts-ignore
   uploadFile(@Body() body: any, @UploadedFile() file: Express.Multer.File): Promise<Message> {
-    // const photo = {} as Photo;
-    // photo.tags = JSON.parse(body.tags);
-    // photo.fileName = 'http://localhost:3000/' + file.filename;
-    // console.log('photo before save in db', photo);
-    // return this.create(photo);
+    const photo = {} as Photo;
+    photo.tags = JSON.parse(body.tags);
+    photo.fileName = 'http://localhost:3000/' + file.filename;
+    console.log('photo before save in db', photo);
+    return this.create(photo);
   }
 }
 
+// todo duplicated (PhotosController) create a service?!
 function createMulterStorage() {
   return {
     storage: diskStorage({

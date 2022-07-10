@@ -1,11 +1,9 @@
-import {Body, Controller, Get, Logger, Param, Post, Put} from '@nestjs/common';
-import {UsersService} from './users.service';
-import {User} from './entities/user.entity';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { UsersService } from './users.service';
+import { User } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
-
-  private readonly logger = new Logger(UsersController.name);
 
   constructor(private readonly usersService: UsersService) {
   }
@@ -17,7 +15,6 @@ export class UsersController {
 
   @Post('login')
   login(@Body() user: User) {
-    // console.log(user)
     return this.usersService.login(user);
   }
 

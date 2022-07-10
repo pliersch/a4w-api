@@ -19,7 +19,7 @@ import { diskStorage } from 'multer';
 import { UpdatePhotoDto } from "./dto/update-photo.dto";
 import { PhotoProcessorService } from "./photo-processor.service";
 import { DeletePhotoResultDto } from "./dto/delete-photo-result.dto";
-import { PageOptionsDto } from "../common/dtos/page-options.dto";
+import { PageOptionsDto } from "@common/dtos/page-options.dto";
 import { PhotoMetaDataDto } from "./dto/photo-meta-data-result.dto";
 import { PhotosResultDto } from "./dto/photos-result.dto";
 

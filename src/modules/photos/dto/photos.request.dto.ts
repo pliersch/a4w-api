@@ -1,4 +1,4 @@
-import { Order } from "../../common/constants/order.constant";
+import { Order } from "@common/constants/order.constant";
 
 export class PhotosRequestDto {
   readonly order?: Order = Order.ASC;

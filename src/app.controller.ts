@@ -1,7 +1,7 @@
-import {Controller, Get, Sse} from '@nestjs/common';
-import {AppService} from './app.service';
-import {interval, Observable} from "rxjs";
-import {map} from "rxjs/operators";
+import { Controller, Get, Sse } from '@nestjs/common';
+import { AppService } from './app.service';
+import { interval, Observable } from "rxjs";
+import { map } from "rxjs/operators";
 
 @Controller()
 export class AppController {
@@ -12,8 +12,8 @@ export class AppController {
 
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  getNestMessage(): string {
+    return this.appService.getNestMessage();
   }
 
   @Sse('sse')
