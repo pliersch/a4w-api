@@ -39,16 +39,16 @@ export class ChatService {
     return await this.repository.remove(message);
   }
 
-  // body is type 'any' because we must parse the json string :(
-  @UseInterceptors(FileInterceptor('image', createMulterStorage()))
-  @Post('file')
-  uploadFile(@Body() body: any, @UploadedFile() file: Express.Multer.File): Promise<Message> {
-    const photo = {} as Photo;
-    photo.tags = JSON.parse(body.tags);
-    photo.fileName = 'http://localhost:3000/' + file.filename;
-    console.log('photo before save in db', photo);
-    return this.create(photo);
-  }
+  // // body is type 'any' because we must parse the json string :(
+  // @UseInterceptors(FileInterceptor('image', createMulterStorage()))
+  // @Post('file')
+  // uploadFile(@Body() body: any, @UploadedFile() file: Express.Multer.File): Promise<Photo> {
+  //   const photo = {} as Photo;
+  //   photo.tags = JSON.parse(body.tags);
+  //   photo.fileName = 'http://localhost:3000/' + file.filename;
+  //   console.log('photo before save in db', photo);
+  //   return this.create(photo);
+  // }
 }
 
 // todo duplicated (PhotosController) create a service?!
