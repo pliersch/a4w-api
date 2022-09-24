@@ -7,7 +7,7 @@ export class Photo extends BaseEntity {
   @Column()
   fileName: string;
 
-  @Column({nullable: true})
+  @Column({nullable: true, default: 0})
   rating: number;
 
   @Column()

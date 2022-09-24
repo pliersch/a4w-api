@@ -62,8 +62,4 @@ export class PhotosService {
     });
 
   }
-
-  // async removeMany(photos: Photo[]) {
-  //   return await this.photoRepository.remove(photos);
-  // }
 }
