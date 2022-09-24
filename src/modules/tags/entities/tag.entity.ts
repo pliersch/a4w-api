@@ -9,4 +9,7 @@ export class Tag extends BaseEntity {
 
   @Column({type: 'varchar', array: true})
   entries: string[];
+
+  @Column({type: 'integer', default: 1})
+  priority: number;
 }

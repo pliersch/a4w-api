@@ -6,11 +6,6 @@ import * as fs from "fs";
 @Injectable()
 export class PhotoExifReaderService {
 
-
-  constructor() {
-    // this.readDirectory('./static/images/gallery/full');
-  }
-
   async readDirectory(inputPath: string): Promise<void> {
     console.log('PhotoExifReaderService readDirectory: ', inputPath)
     const inputDirectory = path.resolve(inputPath)
