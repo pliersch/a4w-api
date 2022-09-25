@@ -27,7 +27,7 @@ export class PhotosService {
   }
 
   async getPhotos(pageOptionsDto: PhotosRequestDto): Promise<PhotosResultDto> {
-    console.log('PhotosService getPhotos: ', pageOptionsDto)
+    // console.log('PhotosService getPhotos: ', pageOptionsDto)
     const queryBuilder = this.photoRepository.createQueryBuilder('photos');
     queryBuilder
       .orderBy('photos.createDateTime', pageOptionsDto.order)
