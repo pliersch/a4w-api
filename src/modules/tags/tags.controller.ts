@@ -26,7 +26,6 @@ export class TagsController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() update: UpdateTagDto): Promise<UpdateResult> {
-    // console.log(id, update)
     // todo priority
     const updateTagDto = {
       entries: update.entries
@@ -36,7 +35,6 @@ export class TagsController {
 
   @Delete(':id')
   remove(@Param('id') id: string): Promise<Tag> {
-    // console.log('id1:', id);
     return this.tagsService.remove(id);
   }
 }

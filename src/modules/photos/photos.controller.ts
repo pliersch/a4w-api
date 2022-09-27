@@ -30,12 +30,6 @@ export class PhotosController {
               private photoProcessor: PhotoProcessorService) {
   }
 
-  // only used with upload
-  @Post()
-  async create(@Body() photo: Photo): Promise<Photo> {
-    return this.photoService.create(photo);
-  }
-
   @Get('meta')
   async getMetaData(): Promise<PhotoMetaDataDto> {
     return this.photoService.getMetaData();
@@ -66,6 +60,12 @@ export class PhotosController {
     return this.photoService.removeOne(id);
   }
 
+  // only used with upload
+  @Post()
+  async create(@Body() photo: Photo): Promise<Photo> {
+    return this.photoService.create(photo);
+  }
+
   // body is type 'any' because we must parse the json string :(
   @UseInterceptors(FileInterceptor('image', createMulterStorage()))
   @Post('file')
@@ -73,12 +73,10 @@ export class PhotosController {
     const photo = {} as Photo;
     photo.tags = JSON.parse(body.tags);
     photo.recordDate = JSON.parse(body.created);
-    // console.log('PhotosController uploadFile: ', JSON.parse(body.created))
     photo.fileName = file.filename;
     await this.photoProcessor.createThumb(photo.fileName);
     return this.create(photo);
   }
-
 }
 
 function createMulterStorage() {
