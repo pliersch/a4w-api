@@ -23,6 +23,7 @@ export class PhotosService {
 
   async getMetaData(): Promise<PhotoMetaDataDto> {
     const number = await this.photoRepository.count();
+    // console.log('PhotosService getMetaData: ', number)
     return new PhotoMetaDataDto(number)
   }
 

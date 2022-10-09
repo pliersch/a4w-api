@@ -10,7 +10,6 @@ export class AppController {
     // console.log('env: ', process.env.NODE_ENV)
   }
 
-
   @Get()
   getNestMessage(): string {
     return this.appService.getNestMessage();
@@ -18,8 +17,8 @@ export class AppController {
 
   @Sse('sse')
   sse(): Observable<MessageEvent> {
-    return interval(10000).pipe(
-      map((_) => ({data: {sse: 'ping'}} as MessageEvent)),
+    return interval(15000).pipe(
+      map((_) => ({data: {type: 'meta_changed'}} as MessageEvent)),
     );
   }
 
