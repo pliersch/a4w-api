@@ -7,7 +7,8 @@ import {
   Patch,
   Post,
   Put,
-  Query, Sse,
+  Query,
+  Sse,
   UploadedFile,
   UseInterceptors
 } from '@nestjs/common';
@@ -22,8 +23,7 @@ import { DeletePhotoResultDto } from "./dto/delete-photo-result.dto";
 import { PageOptionsDto } from "@common/dtos/page-options.dto";
 import { PhotoMetaDataDto } from "./dto/photo-meta-data-result.dto";
 import { PhotosResultDto } from "./dto/photos-result.dto";
-import { interval, Observable, Subject } from "rxjs";
-import { map } from "rxjs/operators";
+import { Observable, Subject } from "rxjs";
 
 @Controller('photos')
 export class PhotosController {
@@ -32,11 +32,17 @@ export class PhotosController {
               private photoProcessor: PhotoProcessorService) {
   }
 
+  // server sent MUST BE UNDER CONSTRUCTOR. OTHERWISE, A TYPEORM ERROR WILL THROW
+
   @Sse('sse')
   sse(): Observable<MessageEvent> {
-    return interval(15000).pipe(
-      map((_) => ({data: {type: 'meta_changed'}} as MessageEvent)),
-    );
+    return this.project$.asObservable();
+  }
+
+  private project$: Subject<MessageEvent> = new Subject()
+
+  private sendEvent(project: MessageEvent) {
+    this.project$.next(project)
   }
 
   @Get('meta')
@@ -75,20 +81,6 @@ export class PhotosController {
     return this.photoService.create(photo);
   }
 
-  // private project$: Subject<MessageEvent> = new Subject()
-  //
-  // private sendEvent(project: MessageEvent) {
-  //   this.project$.next(project)
-  // }
-
-  // @Sse('sse')
-  // sse(): Observable<MessageEvent> {
-  //   // return this.project$.asObservable();
-  //   return interval(1000).pipe(
-  //     map((_) => ({data: {type: 'meta_changed'}} as MessageEvent)),
-  //   );
-  // }
-
   // body is type 'any' because we must parse the json string :(
   @UseInterceptors(FileInterceptor('image', createMulterStorage()))
   @Post('file')
@@ -100,7 +92,7 @@ export class PhotosController {
     await this.photoProcessor.createThumb(photo.fileName);
     // return this.create(photo);
     const promise = this.create(photo);
-    // setTimeout(() => this.sendEvent({data: {type: 'meta_changed'}} as MessageEvent), 1000);
+    setTimeout(() => this.sendEvent({data: {type: 'meta_changed'}} as MessageEvent), 1000);
     return promise;
   }
 }
