@@ -1,7 +1,5 @@
-import { Controller, Get, Sse } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { interval, Observable } from "rxjs";
-import { map } from "rxjs/operators";
 
 @Controller()
 export class AppController {
@@ -15,11 +13,12 @@ export class AppController {
     return this.appService.getNestMessage();
   }
 
-  @Sse('sse')
-  sse(): Observable<MessageEvent> {
-    return interval(15000).pipe(
-      map((_) => ({data: {type: 'meta_changed'}} as MessageEvent)),
-    );
-  }
+
+  // @Sse('sse')
+  // sse(): Observable<MessageEvent> {
+  //   return interval(15000).pipe(
+  //     map((_) => ({data: {type: 'meta_changed'}} as MessageEvent)),
+  //   );
+  // }
 
 }
