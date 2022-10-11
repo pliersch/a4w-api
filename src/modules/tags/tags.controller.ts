@@ -1,13 +1,28 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Sse } from '@nestjs/common';
 import { TagsService } from './tags.service';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { Tag } from './entities/tag.entity';
 import { UpdateResult } from 'typeorm';
 import { UpdateTagDto } from "./dto/update-tag.dto";
+import { Observable, Subject } from "rxjs";
 
 @Controller('tags')
 export class TagsController {
   constructor(private readonly tagsService: TagsService) {}
+
+  // server sent MUST BE UNDER CONSTRUCTOR. OTHERWISE, A TYPEORM ERROR WILL THROW
+
+  private changes$: Subject<MessageEvent> = new Subject()
+
+  @Sse('sse')
+  sse(): Observable<MessageEvent> {
+    return this.changes$.asObservable();
+  }
+
+  private sendEvent(project: MessageEvent) {
+    console.log('TagsController sendEvent: ',)
+    this.changes$.next(project)
+  }
 
   @Post()
   create(@Body() createTagDto: CreateTagDto): Promise<CreateTagDto & Tag> {
@@ -30,7 +45,9 @@ export class TagsController {
     const updateTagDto = {
       entries: update.entries
     }
-    return this.tagsService.update(id, updateTagDto);
+    const result = this.tagsService.update(id, updateTagDto);
+    setTimeout(() => this.sendEvent({data: {type: 'tags_changed'}} as MessageEvent), 1000);
+    return result;
   }
 
   @Delete(':id')

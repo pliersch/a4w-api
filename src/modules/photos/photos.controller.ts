@@ -36,13 +36,13 @@ export class PhotosController {
 
   @Sse('sse')
   sse(): Observable<MessageEvent> {
-    return this.project$.asObservable();
+    return this.changes$.asObservable();
   }
 
-  private project$: Subject<MessageEvent> = new Subject()
+  private changes$: Subject<MessageEvent> = new Subject()
 
   private sendEvent(project: MessageEvent) {
-    this.project$.next(project)
+    this.changes$.next(project)
   }
 
   @Get('meta')
