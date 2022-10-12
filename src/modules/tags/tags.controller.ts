@@ -20,7 +20,6 @@ export class TagsController {
   }
 
   private sendEvent(project: MessageEvent) {
-    console.log('TagsController sendEvent: ',)
     this.changes$.next(project)
   }
 
