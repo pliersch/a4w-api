@@ -13,12 +13,4 @@ export class AppController {
     return this.appService.getNestMessage();
   }
 
-
-  // @Sse('sse')
-  // sse(): Observable<MessageEvent> {
-  //   return interval(15000).pipe(
-  //     map((_) => ({data: {type: 'meta_changed'}} as MessageEvent)),
-  //   );
-  // }
-
 }

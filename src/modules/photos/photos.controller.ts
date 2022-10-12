@@ -92,7 +92,7 @@ export class PhotosController {
     await this.photoProcessor.createThumb(photo.fileName);
     // return this.create(photo);
     const promise = this.create(photo);
-    setTimeout(() => this.sendEvent({data: {type: 'meta_changed'}} as MessageEvent), 1000);
+    setTimeout(() => this.sendEvent({data: {type: 'photo_added'}} as MessageEvent), 1000);
     return promise;
   }
 }
