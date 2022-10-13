@@ -1,5 +1,5 @@
-import {Injectable} from '@nestjs/common';
-import {SharpService} from "nestjs-sharp";
+import { Injectable } from '@nestjs/common';
+import { SharpService } from "nestjs-sharp";
 import * as path from "path";
 import * as fs from "fs";
 
@@ -36,7 +36,6 @@ export class PhotoProcessorService {
     }
     Promise.all(promises)
       .then(() => {
-        console.log('PhotosProcessor : YEAH',)
         return 1;
       })
       .catch((e) => {

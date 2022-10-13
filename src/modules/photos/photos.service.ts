@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { DeleteResult, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Photo } from './entites/photo.entity';
 import { UpdatePhotoDto } from "./dto/update-photo.dto";
-import { DeletePhotoResultDto } from "./dto/delete-photo-result.dto";
 import { PhotoMetaDataDto } from "./dto/photo-meta-data-result.dto";
 import { PhotosResultDto } from "./dto/photos-result.dto";
 import { PhotosRequestDto } from "./dto/photos.request.dto";
@@ -50,15 +49,8 @@ export class PhotosService {
     return await this.photoRepository.update(id, dto);
   }
 
-  async removeOne(id: string): Promise<DeletePhotoResultDto> {
-    // const photo = await this.photoRepository.findOne(id);
-    // const deleteResult = await this.photoRepository.remove(photo);
-    const deleteResult: DeleteResult = await this.photoRepository.delete(id);
-    console.log('PhotosService removeOne: ', deleteResult)
-    const res: string = deleteResult.affected == 1 ? id : null;
-    return new Promise(function (resolve) {
-      resolve({id: res});
-    });
-
+  async removeOne(id: string): Promise<Photo> {
+    const photo = await this.photoRepository.findOne(id);
+    return await this.photoRepository.remove(photo);
   }
 }

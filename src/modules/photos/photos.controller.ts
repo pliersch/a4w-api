@@ -12,6 +12,7 @@ import {
   UploadedFile,
   UseInterceptors
 } from '@nestjs/common';
+import * as fs from "fs";
 import { PhotosService } from './photos.service';
 import { Photo } from './entites/photo.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -72,7 +73,24 @@ export class PhotosController {
 
   @Delete(':id')
   async removeOne(@Param('id') id: string): Promise<DeletePhotoResultDto> {
-    return this.photoService.removeOne(id);
+    const promise = this.photoService.removeOne(id);
+    promise.then(photo => this.deletePhoto(photo.fileName));
+    return new Promise(function (resolve) {
+      resolve({id: id});
+    });
+  }
+
+  // todo: make process async
+  private deletePhoto(fileName: string): void {
+    fs.unlink('./static/images/gallery/full/' + fileName,
+      res => console.error('error full: ', res));
+    const name = fileName.substring(0, fileName.lastIndexOf('.'));
+    const name300 = name + '-300.webp';
+    const name600 = name + '-600.webp';
+    fs.unlink('./static/images/gallery/thumbs/' + name300,
+      res => console.error('error 300: ', res));
+    fs.unlink('./static/images/gallery/thumbs/' + name600,
+      res => console.error('error 600: ', res));
   }
 
   // only used with upload
