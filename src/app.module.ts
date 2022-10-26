@@ -12,6 +12,7 @@ import { UsersModule } from "@modules/users/users.module";
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TestModule } from "@modules/test/test.module";
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AppService } from './app.service';
     ChatModule,
     TagsModule,
     DownloadModule,
+    TestModule,
     // ConfigModule.forRoot({isGlobal: true, load: [configuration]}),
     SharpModule,
     TypeOrmModule.forRoot(config.database),
