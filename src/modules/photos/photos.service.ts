@@ -38,7 +38,7 @@ export class PhotosService {
   }
 
   async findOne(id: string): Promise<Photo> {
-    return await this.photoRepository.findOne(id);
+    return await this.photoRepository.findOneBy({id: id});
   }
 
   async replace(photo: Photo) {
@@ -50,7 +50,7 @@ export class PhotosService {
   }
 
   async removeOne(id: string): Promise<Photo> {
-    const photo = await this.photoRepository.findOne(id);
+    const photo = await this.photoRepository.findOneBy({id: id});
     return await this.photoRepository.remove(photo);
   }
 }

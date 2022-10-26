@@ -21,7 +21,7 @@ export class TagsService {
   }
 
   async findOne(id: string): Promise<Tag> {
-    return await this.repository.findOne(id);
+    return await this.repository.findOneBy({id: id});
   }
 
   async update(id: string, updateTagDto: UpdateTagDto): Promise<UpdateResult> {

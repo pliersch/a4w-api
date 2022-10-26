@@ -27,7 +27,7 @@ export class ChatService {
   }
 
   async findOne(id: string): Promise<Message> {
-    return await this.repository.findOne(id);
+    return await this.repository.findOneBy({id: id});
   }
 
   async update(message: Message): Promise<UpdateResult> {
@@ -35,7 +35,7 @@ export class ChatService {
   }
 
   async removeOne(id: string): Promise<Message> {
-    const message = await this.repository.findOne(id);
+    const message = await this.repository.findOneBy({id: id});
     return await this.repository.remove(message);
   }
 
