@@ -1,5 +1,4 @@
 import { Column, Entity, UpdateDateColumn } from 'typeorm';
-import { BaseEntity } from "@common/entities/base.entity";
 import { ExtendedBaseEntity } from "@common/entities/extended-base.entity";
 
 export enum Role {
@@ -9,9 +8,9 @@ export enum Role {
 }
 
 export enum Status {
+  accept,
   wait,
   block,
-  accept,
 }
 
 @Entity()
@@ -26,10 +25,10 @@ export class User extends ExtendedBaseEntity {
   @Column({type: 'varchar', length: 100})
   email: string;
 
-  @Column('int')
+  @Column({type: 'int', nullable: true})
   role: Role;
 
-  @Column('int')
+  @Column({type: 'int', nullable: true})
   status: Status;
 
   @UpdateDateColumn({type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP'})

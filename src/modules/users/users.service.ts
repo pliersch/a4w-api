@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { CreateUserDto } from "@modules/users/dto/create-user.dto";
 
 @Injectable()
 export class UsersService {
@@ -13,7 +12,7 @@ export class UsersService {
   ) {
   }
 
-  async login(user: CreateUserDto): Promise<User | undefined> {
+  async login(user: User): Promise<User | undefined> {
     return await this.repository.findOne(findUserByAuthTokenOptions(user));
   }
 
@@ -42,7 +41,7 @@ export class UsersService {
   // }
 }
 
-function findUserByAuthTokenOptions(user: CreateUserDto) {
+function findUserByAuthTokenOptions(user: User) {
   // console.log('func obj', user.id);
   return {
     where:

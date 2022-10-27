@@ -8,9 +8,9 @@ export class Test {
   })
   id: string;
 
-  @Column({type: 'varchar', length: 40})
+  @Column({type: 'varchar', length: 40, nullable: true})
   tagName: string;
 
-  @Column({type: 'date'})
+  @Column({type: 'date', nullable: true})
   begin: string;
 }
