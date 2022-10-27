@@ -11,6 +11,6 @@ export class Test {
   @Column({type: 'varchar', length: 40})
   tagName: string;
 
-  @Column({type: 'integer', default: 1})
-  priority: number;
+  @Column({type: 'date'})
+  begin: string;
 }
