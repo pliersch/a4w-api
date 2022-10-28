@@ -4,8 +4,9 @@ import { BaseEntity } from "@common/entities/base.entity";
 @Entity()
 export class Message extends BaseEntity {
 
-  @Column({type: 'varchar', length: 40})
-  userId: string;
+  // todo one-to-many
+  // @Column({type: 'uuid', length: 40})
+  // id: string;
 
   @Column({type: 'varchar', length: 300})
   text: string;

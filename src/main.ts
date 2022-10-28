@@ -8,10 +8,10 @@ async function bootstrap() {
   });
 
   const options = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('A4W')
+    // .setDescription('The cats API description')
     .setVersion('1.0')
-    .addTag('cats')
+    .addTag('a4w')
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);

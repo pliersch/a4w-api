@@ -1,5 +1,7 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne } from 'typeorm';
 import { BaseEntity } from "@common/entities/base.entity";
+import { User } from "@modules/users/entities/user.entity";
+import { Tag } from "@modules/tags/entities/tag.entity";
 
 @Entity()
 export class Photo extends BaseEntity {
@@ -13,6 +15,9 @@ export class Photo extends BaseEntity {
   @Column()
   recordDate: string;
 
-  @Column({type: 'varchar', nullable: true, array: true})
-  tags: string[];
+  @ManyToMany(() => Tag)
+  tags: Tag[]
+
+  @ManyToOne(() => User, (user) => user.photos)
+  user: User
 }

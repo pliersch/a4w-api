@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User } from './entities/user.entity';
+import { Role, Status, User } from './entities/user.entity';
 
 @Controller('auth')
 export class UsersController {
@@ -13,17 +13,22 @@ export class UsersController {
   }
 
   @Post('login')
-  login(@Body() user: User) {
-    console.log('UsersController login: ', user)
-    // return this.usersService.login(user);
-    let promise = this.usersService.login(user);
-    promise.then((user) => {
-      console.log(user);
-      if (!user) {
-        promise = this.createGuest(user);
+  async login(@Body() user: User) {
+    let result: User = null;
+    await this.usersService.login(user).then((u) => {
+      if (u) {
+        result = u;
       }
     })
-    return promise;
+    if (result.status === Status.block) {
+      return null;
+    }
+    if (!result) {
+      await this.createGuest(user).then((u) => {
+        result = u;
+      })
+    }
+    return result;
   }
 
   @Get()
@@ -41,8 +46,10 @@ export class UsersController {
     return this.usersService.update(/*id,*/ user);
   }
 
-  private createGuest(userDto: User) {
-    return this.usersService.create(userDto);
+  private createGuest(user: User) {
+    user.status = Status.wait;
+    user.role = Role.Guest;
+    return this.usersService.create(user);
   }
 }
 

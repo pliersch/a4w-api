@@ -1,5 +1,6 @@
-import { Column, Entity, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, OneToMany, UpdateDateColumn } from 'typeorm';
 import { ExtendedBaseEntity } from "@common/entities/extended-base.entity";
+import { Photo } from "@modules/photos/entites/photo.entity";
 
 export enum Role {
   Admin,
@@ -32,5 +33,8 @@ export class User extends ExtendedBaseEntity {
   status: Status;
 
   @UpdateDateColumn({type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP'})
-  lastLoginDate: Date;
+  lastLoginAt: Date;
+
+  @OneToMany(() => Photo, (photo) => photo.user)
+  photos: Photo[]
 }

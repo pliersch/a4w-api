@@ -9,11 +9,10 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly repository: Repository<User>,
-  ) {
-  }
+  ) { }
 
   async login(user: User): Promise<User | undefined> {
-    return await this.repository.findOne(findUserByAuthTokenOptions(user));
+    return await this.repository.findOneBy({email: user.email});
   }
 
   async create(user: User): Promise<User> {
@@ -39,12 +38,4 @@ export class UsersService {
   // async removeMany(users: User[]) {
   //   return await this.repository.remove(users);
   // }
-}
-
-function findUserByAuthTokenOptions(user: User) {
-  // console.log('func obj', user.id);
-  return {
-    where:
-      {email: user.email}
-  };
 }

@@ -6,16 +6,16 @@ export abstract class BaseEntity {
   id: string;
 
   @CreateDateColumn({type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP'})
-  createDateTime: Date;
+  createdAt: Date;
 
   // TODO remove nullable if admin in table ;)
-  @Column({type: 'varchar', length: 300, nullable: true})
-  createdBy: string; // todo replace by user-ref
+  @Column({type: 'uuid', nullable: true})
+  createdBy: string;
 
   @UpdateDateColumn({type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP'})
-  lastChangedDateTime: Date;
+  lastChangedAt: Date;
 
   // TODO remove nullable
-  @Column({type: 'varchar', length: 300, nullable: true})
-  lastChangedBy: string; // todo replace by user-ref
+  @Column({type: 'uuid', nullable: true})
+  lastChangedBy: string;
 }
