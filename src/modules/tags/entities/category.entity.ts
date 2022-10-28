@@ -3,7 +3,7 @@ import { BaseEntity } from "@common/entities/base.entity";
 import { Tag } from "@modules/tags/entities/tag.entity";
 
 @Entity()
-export class Category extends BaseEntity {
+export class TagCategory extends BaseEntity {
 
   @Column({type: 'varchar', length: 40})
   name: string;
