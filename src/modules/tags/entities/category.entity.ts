@@ -8,9 +8,9 @@ export class TagCategory extends BaseEntity {
   @Column({type: 'varchar', length: 40})
   name: string;
 
-  @OneToMany(() => Tag, (tag) => tag.category)
-  tags: Tag[]
-
   @Column({type: 'integer', default: 1})
   priority: number;
+
+  @OneToMany(() => Tag, (tag) => tag.category)
+  tags: Tag[]
 }

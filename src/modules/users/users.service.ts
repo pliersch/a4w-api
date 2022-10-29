@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
+import { Role, Status, User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -23,7 +23,7 @@ export class UsersService {
     return await this.repository.find();
   }
 
-  async findOne(id: string): Promise<User> {
+  async findById(id: string): Promise<User> {
     return await this.repository.findOneBy({id: id});
   }
 
@@ -38,4 +38,32 @@ export class UsersService {
   // async removeMany(users: User[]) {
   //   return await this.repository.remove(users);
   // }
+
+  //////////////////////////////////////////////////////////
+  //                   System
+  //////////////////////////////////////////////////////////
+
+  async createSystemUser(): Promise<User> {
+    let result: User = null;
+    await this.repository.findOneBy({email: 'hourby@gmail.com'}).then((user) => {
+      if (user) {
+        result = user;
+      }
+    });
+    if (!result) {
+      await this.repository.save(this._getSystemUser()).then((user => result = user));
+    }
+    return result;
+  }
+
+  _getSystemUser(): Partial<User> {
+    return {
+      givenName: 'Patrick',
+      lastName: 'Liersch',
+      email: 'hourby@gmail.com',
+      status: Status.accept,
+      role: Role.Admin,
+      isActive: true,
+    }
+  }
 }

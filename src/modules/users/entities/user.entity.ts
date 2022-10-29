@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, UpdateDateColumn } from 'typeorm';
 import { ExtendedBaseEntity } from "@common/entities/extended-base.entity";
 import { Photo } from "@modules/photos/entites/photo.entity";
+import { Message } from "@modules/chat/message.entity";
 
 export enum Role {
   Admin,
@@ -37,4 +38,8 @@ export class User extends ExtendedBaseEntity {
 
   @OneToMany(() => Photo, (photo) => photo.user)
   photos: Photo[]
+
+  // todo message createdBy is a string at the moment
+  // @OneToMany(() => Message, (message) => message.)
+  // messages: Message[]
 }
