@@ -11,6 +11,8 @@ export class TagCategory extends BaseEntity {
   @Column({type: 'integer', default: 1})
   priority: number;
 
-  @OneToMany(() => Tag, (tag) => tag.category)
+  @OneToMany(() => Tag, (tag) => tag.category, {
+    cascade: ["insert", "remove", "soft-remove"],
+  })
   tags: Tag[]
 }

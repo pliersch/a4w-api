@@ -1,13 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { TagsService } from "@modules/tags/tags.service";
 import { UsersService } from "@modules/users/users.service";
+import { TagGroupService } from "@modules/tags/services/tag-group.service";
 
 @Controller()
 export class AppController {
 
   constructor(private readonly appService: AppService,
-              private readonly tagsService: TagsService,
+              private readonly tagsService: TagGroupService,
               private readonly usersService: UsersService,
   ) {
     this.init();

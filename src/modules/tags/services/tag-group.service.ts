@@ -1,38 +1,46 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTagDto } from './dto/create-tag.dto';
-import { UpdateTagDto } from './dto/update-tag.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
-import { Tag } from './entities/tag.entity';
+import { Tag } from '../entities/tag.entity';
 import { TagCategory } from "@modules/tags/entities/category.entity";
+import { CreateTagGroupDto } from "@modules/tags/dto/create-tag-group.dto";
+import { UpdateTagGroupDto } from "@modules/tags/dto/update-tag-group.dto";
 
 @Injectable()
-export class TagsService {
+export class TagGroupService {
   constructor(
     @InjectRepository(TagCategory)
     private readonly categoryRepository: Repository<TagCategory>,
-    @InjectRepository(Tag)
-    private readonly tagRepository: Repository<Tag>,
   ) {}
 
-  async create(createTagDto: CreateTagDto): Promise<CreateTagDto & Tag> {
-    return await this.tagRepository.save(createTagDto);
+  async create(dto: CreateTagGroupDto): Promise<TagCategory> {
+    console.log('TagsService create: ', dto)
+    return await this.categoryRepository.save(dto);
   }
 
-  async findAll(): Promise<Tag[]> {
-    return await this.tagRepository.find();
+  async findAll(): Promise<TagCategory[]> {
+    return await this.categoryRepository.find({
+      relations: {
+        tags: true,
+      },
+    });
   }
 
-  async findOne(id: string): Promise<Tag> {
-    return await this.tagRepository.findOneBy({id: id});
+  async findById(id: string): Promise<TagCategory> {
+    return this.categoryRepository.findOneBy({id: id});
   }
 
-  async update(id: string, updateTagDto: UpdateTagDto): Promise<UpdateResult> {
-    return await this.tagRepository.update(id, updateTagDto);
+  async findOne(id: string): Promise<TagCategory> {
+    return await this.categoryRepository.findOneBy({id: id});
   }
 
-  async remove(id: string): Promise<Tag> {
-    return await this.tagRepository.remove(await this.findOne(id));
+  async update(id: string, updateTagDto: UpdateTagGroupDto): Promise<UpdateResult> {
+    console.log('TagsService update: ', updateTagDto)
+    return await this.categoryRepository.update(id, updateTagDto);
+  }
+
+  async remove(id: string): Promise<TagCategory> {
+    return await this.categoryRepository.remove(await this.findOne(id));
   }
 
   //////////////////////////////////////////////////////////
@@ -55,7 +63,7 @@ export class TagsService {
     const promises = [];
     const tag: Tag = new Tag();
     tag.name = 'Patrick';
-    await this.tagRepository.save(tag)
+    await this.categoryRepository.save(tag)
 
     const category: TagCategory = new TagCategory();
     category.name = 'Personen'
