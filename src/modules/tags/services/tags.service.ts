@@ -11,7 +11,7 @@ export class TagsService {
   ) {}
 
   async create(tag: Tag): Promise<Tag> {
-    console.log('TagsService create: ', tag)
+    // console.log('TagsService create: ', tag)
     return this.tagRepository.save(tag);
   }
 
@@ -20,7 +20,7 @@ export class TagsService {
   }
 
   async update(id: string, name: string): Promise<UpdateResult> {
-    console.log('TagsService update: ', name)
+    // console.log('TagsService update: ', name)
     return this.tagRepository.update(id, {name: name});
   }
 

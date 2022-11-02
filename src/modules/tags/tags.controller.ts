@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Sse } from '@nestjs/common';
 import { TagsService } from './services/tags.service';
-import { CreateTagDto } from './dto/create-tag.dto';
 import { Tag } from './entities/tag.entity';
 import { UpdateResult } from 'typeorm';
 import { Observable, Subject } from "rxjs";
@@ -8,6 +7,7 @@ import { TagCategory } from "@modules/tags/entities/category.entity";
 import { UpdateTagGroupDto } from "@modules/tags/dto/update-tag-group.dto";
 import { TagGroupService } from "@modules/tags/services/tag-group.service";
 import { CreateTagGroupDto } from "@modules/tags/dto/create-tag-group.dto";
+import { UpdateTagGroupResultDto } from "@modules/tags/dto/update-tag-group-result.dto";
 
 @Controller('tags')
 export class TagsController {
@@ -43,13 +43,13 @@ export class TagsController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() dto: UpdateTagGroupDto): Promise<UpdateResult> {
-    console.log('TagsController dto: ', dto)
+  async update(@Param('id') id: string, @Body() dto: UpdateTagGroupDto): Promise<UpdateTagGroupResultDto> {
+    // console.log('TagsController dto: ', dto)
     let group: TagCategory;
     await this.groupService.findById(id).then((res) => {
       group = res;
     });
-    console.log('TagsController update: ', group)
+    // console.log('TagsController update: ', group)
     const promises = []
     let tag: Tag
     if (dto.addedNames) {
@@ -64,18 +64,19 @@ export class TagsController {
     // if (dto.removedTagIds) {
     //   promises.push(await this.tagsService.remove(id, dto.removedTagIds));
     // }
-    let updateResult: UpdateResult;
-    Promise.all(promises)
+    const updateResult: UpdateTagGroupResultDto = new UpdateTagGroupResultDto();
+    updateResult.id = group.id;
+    await Promise.all(promises)
       .then((res) => {
-        console.log('TagsController : ', res)
-        return 1;
+        console.log('TagsController 1: ',)
+        updateResult.addedTags = res;
       })
       .catch((e) => {
-        console.log('PhotosProcessor error: ',)
+        console.log('error: ', e);
       });
-    // const result = this.tagsService.update(id, dto);
     setTimeout(() => this.sendEvent({data: {type: 'tags_changed'}} as MessageEvent), 1000);
-    return updateResult; // fixme not initialized
+    console.log('TagsController 2: ', updateResult)
+    return updateResult;
   }
 
   @Delete(':id')
