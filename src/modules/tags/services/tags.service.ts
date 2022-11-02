@@ -24,8 +24,16 @@ export class TagsService {
     return this.tagRepository.update(id, {name: name});
   }
 
-  async remove(id: string): Promise<Tag> {
+  async removeOne(id: string): Promise<Tag> {
     return this.tagRepository.remove(await this.findById(id));
   }
+
+  // async removeMany(ids: string[]): Promise<Tag[]> {
+  //   const promises/*:Tag[]*/ = [];
+  //   for (const id of ids) {
+  //     promises.push();
+  //   }
+  //   return promises;
+  // }
 
 }

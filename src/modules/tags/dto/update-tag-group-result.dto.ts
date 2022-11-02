@@ -1,7 +1,9 @@
+import { Tag } from "@modules/tags/entities/tag.entity";
+
 export class UpdateTagGroupResultDto {
   id: string;
   name?: string;
   priority?: number;
-  addedTags: string[];
+  addedTags?: Tag[];
   removedTagIds?: string[];
 }

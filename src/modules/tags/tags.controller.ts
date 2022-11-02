@@ -46,12 +46,32 @@ export class TagsController {
   async update(@Param('id') id: string, @Body() dto: UpdateTagGroupDto): Promise<UpdateTagGroupResultDto> {
     // console.log('TagsController dto: ', dto)
     let group: TagCategory;
+    const updateResult: UpdateTagGroupResultDto = new UpdateTagGroupResultDto();
+
     await this.groupService.findById(id).then((res) => {
       group = res;
     });
+    updateResult.id = group.id;
     // console.log('TagsController update: ', group)
-    const promises = []
+    let promises = [];
     let tag: Tag
+
+    if (dto.removedTagIds) {
+      for (const id of dto.removedTagIds) {
+        promises.push(this.tagsService.removeOne(id));
+      }
+    }
+
+    await Promise.all(promises)
+      .then((res) => {
+        console.log('TagsController removed: ', res)
+        updateResult.removedTagIds = dto.removedTagIds;
+      })
+      .catch((e) => {
+        console.log('error: ', e);
+      });
+
+    promises = [];
     if (dto.addedNames) {
       for (const name of dto.addedNames) {
         tag = new Tag();
@@ -60,12 +80,6 @@ export class TagsController {
         promises.push(this.tagsService.create(tag));
       }
     }
-
-    // if (dto.removedTagIds) {
-    //   promises.push(await this.tagsService.remove(id, dto.removedTagIds));
-    // }
-    const updateResult: UpdateTagGroupResultDto = new UpdateTagGroupResultDto();
-    updateResult.id = group.id;
     await Promise.all(promises)
       .then((res) => {
         console.log('TagsController 1: ',)
@@ -74,13 +88,14 @@ export class TagsController {
       .catch((e) => {
         console.log('error: ', e);
       });
+
     setTimeout(() => this.sendEvent({data: {type: 'tags_changed'}} as MessageEvent), 1000);
-    console.log('TagsController 2: ', updateResult)
+    console.log('TagsController result: ', updateResult)
     return updateResult;
   }
 
   @Delete(':id')
   remove(@Param('id') id: string): Promise<Tag> {
-    return this.tagsService.remove(id);
+    return this.tagsService.removeOne(id);
   }
 }
