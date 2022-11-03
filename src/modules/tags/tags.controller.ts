@@ -27,11 +27,6 @@ export class TagsController {
     this.changes$.next(project)
   }
 
-  @Post()
-  create(@Body() createTagDto: CreateTagGroupDto): Promise<TagCategory> {
-    return this.groupService.create(createTagDto);
-  }
-
   @Get()
   findAll(): Promise<TagCategory[]> {
     return this.groupService.findAll();
@@ -40,6 +35,30 @@ export class TagsController {
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Tag | undefined> {
     return this.tagsService.findById(id);
+  }
+
+  @Post()
+  async create(@Body() dto: CreateTagGroupDto): Promise<TagCategory> {
+    console.log('TagsController create: ', dto)
+    const tags: Tag[] = [];
+    if (dto.tagNames) {
+      let tag: Tag;
+      for (const name of dto.tagNames) {
+        tag = new Tag();
+        tag.name = name;
+        tags.push(tag);
+      }
+    }
+    const group: TagCategory = new TagCategory();
+    group.tags = tags;
+    group.name = dto.name;
+    group.priority = dto.priority;
+
+    // await this.groupService.create(dto).then( group => {
+    //
+    // })
+    // this.tagsService.create(dto.entries)
+    return this.groupService.create(group);
   }
 
   @Patch(':id')

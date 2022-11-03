@@ -1,6 +1,6 @@
 export class CreateTagGroupDto {
   id: string;
   name: string;
-  entries: string[];
+  tagNames: string[];
   priority: number;
 }

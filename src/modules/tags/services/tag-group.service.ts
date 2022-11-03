@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { Tag } from '../entities/tag.entity';
 import { TagCategory } from "@modules/tags/entities/category.entity";
-import { CreateTagGroupDto } from "@modules/tags/dto/create-tag-group.dto";
 import { UpdateTagGroupDto } from "@modules/tags/dto/update-tag-group.dto";
 
 @Injectable()
@@ -13,9 +12,9 @@ export class TagGroupService {
     private readonly categoryRepository: Repository<TagCategory>,
   ) {}
 
-  async create(dto: CreateTagGroupDto): Promise<TagCategory> {
-    console.log('TagsService create: ', dto)
-    return await this.categoryRepository.save(dto);
+  async create(group: TagCategory): Promise<TagCategory> {
+    console.log('TagGroupService create: ', group)
+    return await this.categoryRepository.save(group);
   }
 
   async findAll(): Promise<TagCategory[]> {
