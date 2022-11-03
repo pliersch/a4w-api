@@ -1,9 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Sse } from '@nestjs/common';
 import { TagsService } from './services/tags.service';
 import { Tag } from './entities/tag.entity';
-import { UpdateResult } from 'typeorm';
 import { Observable, Subject } from "rxjs";
-import { TagCategory } from "@modules/tags/entities/category.entity";
+import { TagGroup } from "@modules/tags/entities/tag-group.entity";
 import { UpdateTagGroupDto } from "@modules/tags/dto/update-tag-group.dto";
 import { TagGroupService } from "@modules/tags/services/tag-group.service";
 import { CreateTagGroupDto } from "@modules/tags/dto/create-tag-group.dto";
@@ -28,7 +27,7 @@ export class TagsController {
   }
 
   @Get()
-  findAll(): Promise<TagCategory[]> {
+  findAll(): Promise<TagGroup[]> {
     return this.groupService.findAll();
   }
 
@@ -38,8 +37,8 @@ export class TagsController {
   }
 
   @Post()
-  async create(@Body() dto: CreateTagGroupDto): Promise<TagCategory> {
-    console.log('TagsController create: ', dto)
+  async create(@Body() dto: CreateTagGroupDto): Promise<TagGroup> {
+    // console.log('TagsController create: ', dto)
     const tags: Tag[] = [];
     if (dto.tagNames) {
       let tag: Tag;
@@ -49,7 +48,7 @@ export class TagsController {
         tags.push(tag);
       }
     }
-    const group: TagCategory = new TagCategory();
+    const group: TagGroup = new TagGroup();
     group.tags = tags;
     group.name = dto.name;
     group.priority = dto.priority;
@@ -64,7 +63,7 @@ export class TagsController {
   @Patch(':id')
   async update(@Param('id') id: string, @Body() dto: UpdateTagGroupDto): Promise<UpdateTagGroupResultDto> {
     // console.log('TagsController dto: ', dto)
-    let group: TagCategory;
+    let group: TagGroup;
     const updateResult: UpdateTagGroupResultDto = new UpdateTagGroupResultDto();
 
     await this.groupService.findById(id).then((res) => {
@@ -95,7 +94,7 @@ export class TagsController {
       for (const name of dto.addedNames) {
         tag = new Tag();
         tag.name = name;
-        tag.category = group;
+        tag.group = group;
         promises.push(this.tagsService.create(tag));
       }
     }

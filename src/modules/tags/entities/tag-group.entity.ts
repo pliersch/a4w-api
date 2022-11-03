@@ -3,7 +3,7 @@ import { BaseEntity } from "@common/entities/base.entity";
 import { Tag } from "@modules/tags/entities/tag.entity";
 
 @Entity()
-export class TagCategory extends BaseEntity {
+export class TagGroup extends BaseEntity {
 
   @Column({type: 'varchar', length: 40})
   name: string;
@@ -11,7 +11,7 @@ export class TagCategory extends BaseEntity {
   @Column({type: 'integer', default: 1})
   priority: number;
 
-  @OneToMany(() => Tag, (tag) => tag.category, {
+  @OneToMany(() => Tag, (tag) => tag.group, {
     cascade: ["insert", "remove", "soft-remove"],
   })
   tags: Tag[]

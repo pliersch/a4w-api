@@ -3,12 +3,12 @@ import { TagsService } from './services/tags.service';
 import { TagsController } from './tags.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Tag } from './entities/tag.entity';
-import { TagCategory } from "@modules/tags/entities/category.entity";
+import { TagGroup } from "@modules/tags/entities/tag-group.entity";
 import { TagGroupService } from "@modules/tags/services/tag-group.service";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Tag, TagCategory])
+    TypeOrmModule.forFeature([Tag, TagGroup])
   ],
   controllers: [TagsController],
   exports: [TagGroupService],
