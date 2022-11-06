@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne } from 'typeorm';
 import { BaseEntity } from "@common/entities/base.entity";
 import { TagGroup } from "@modules/tags/entities/tag-group.entity";
+import { Photo } from "@modules/photos/entites/photo.entity";
 
 @Entity()
 export class Tag extends BaseEntity {
@@ -10,4 +11,7 @@ export class Tag extends BaseEntity {
 
   @ManyToOne(() => TagGroup, (group) => group.tags)
   group: TagGroup
+
+  // @ManyToMany(() => Photo, (group) => group.tags)
+  // photo: Photo
 }

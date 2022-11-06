@@ -11,7 +11,7 @@ export class TagsService {
   ) {}
 
   async create(tag: Tag): Promise<Tag> {
-    console.log('TagsService create: ', tag)
+    // console.log('TagsService create: ', tag)
     return this.tagRepository.save(tag);
   }
 

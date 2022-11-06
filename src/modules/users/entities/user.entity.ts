@@ -1,7 +1,6 @@
-import { Column, Entity, OneToMany, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
 import { ExtendedBaseEntity } from "@common/entities/extended-base.entity";
 import { Photo } from "@modules/photos/entites/photo.entity";
-import { Message } from "@modules/chat/message.entity";
 
 export enum Role {
   Admin,
@@ -33,11 +32,17 @@ export class User extends ExtendedBaseEntity {
   @Column({type: 'int', nullable: true})
   status: Status;
 
-  @UpdateDateColumn({type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP'})
+  @Column({type: 'date'})
   lastLoginAt: Date;
 
   @OneToMany(() => Photo, (photo) => photo.user)
   photos: Photo[]
+
+  @ManyToMany(() => Photo, (photo) => photo.user)
+  favorites: Photo[]
+
+  @OneToMany(() => Photo, (photo) => photo.allowedUser)
+  protectedPhotos: Photo[]
 
   // todo message createdBy is a string at the moment
   // @OneToMany(() => Message, (message) => message.)

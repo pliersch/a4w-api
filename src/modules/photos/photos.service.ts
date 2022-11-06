@@ -28,6 +28,7 @@ export class PhotosService {
     const queryBuilder = this.photoRepository.createQueryBuilder('photos');
     queryBuilder
       .orderBy('photos.recordDate', pageOptionsDto.order)
+      .leftJoinAndSelect("photos.tags", "tags")
       .skip(pageOptionsDto.from)
       .take(pageOptionsDto.take);
 

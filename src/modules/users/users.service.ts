@@ -12,7 +12,12 @@ export class UsersService {
   ) { }
 
   async login(user: User): Promise<User | undefined> {
-    return await this.repository.findOneBy({email: user.email});
+    const res = this.repository.findOneBy({email: user.email});
+    await res.then(val => {
+      val.lastLoginAt = new Date();
+      this.repository.save(val);
+    })
+    return res;
   }
 
   async create(user: User): Promise<User> {
@@ -64,6 +69,7 @@ export class UsersService {
       status: Status.accept,
       role: Role.Admin,
       isActive: true,
+      lastLoginAt: new Date()
     }
   }
 }

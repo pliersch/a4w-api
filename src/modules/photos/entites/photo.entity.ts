@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
 import { BaseEntity } from "@common/entities/base.entity";
 import { User } from "@modules/users/entities/user.entity";
 import { Tag } from "@modules/tags/entities/tag.entity";
@@ -15,8 +15,15 @@ export class Photo extends BaseEntity {
   @Column()
   recordDate: string;
 
+  @Column({default: true})
+  public: boolean;
+
   @ManyToMany(() => Tag)
+  @JoinTable()
   tags: Tag[]
+
+  @ManyToMany(() => User, (user) => user.protectedPhotos)
+  allowedUser: User[];
 
   @ManyToOne(() => User, (user) => user.photos)
   user: User
