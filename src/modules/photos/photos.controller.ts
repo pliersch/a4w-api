@@ -25,12 +25,15 @@ import { PageOptionsDto } from "@common/dtos/page-options.dto";
 import { PhotoMetaDataDto } from "./dto/photo-meta-data-result.dto";
 import { PhotosResultDto } from "./dto/photos-result.dto";
 import { Observable, Subject } from "rxjs";
+import { User } from "@modules/users/entities/user.entity";
+import { getPostgresDataSource } from "../../postgres.datasource";
 
 @Controller('photos')
 export class PhotosController {
 
   constructor(private photoService: PhotosService,
               private photoProcessor: PhotoProcessorService) {
+
   }
 
   // server sent MUST BE UNDER CONSTRUCTOR. OTHERWISE, A TYPEORM ERROR WILL THROW
@@ -106,9 +109,10 @@ export class PhotosController {
     const photo = {} as Photo;
     photo.tags = JSON.parse(body.tags);
     photo.recordDate = JSON.parse(body.created);
+    const dataSource = await getPostgresDataSource();
+    photo.user = await dataSource.manager.findOneBy(User, {id: body.userid});
     photo.fileName = file.filename;
     await this.photoProcessor.createThumb(photo.fileName);
-    // return this.create(photo);
     const promise = this.create(photo);
     setTimeout(() => this.sendEvent({data: {type: 'photo_added'}} as MessageEvent), 1000);
     return promise;

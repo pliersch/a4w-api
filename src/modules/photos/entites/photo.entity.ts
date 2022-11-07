@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
 import { BaseEntity } from "@common/entities/base.entity";
 import { User } from "@modules/users/entities/user.entity";
 import { Tag } from "@modules/tags/entities/tag.entity";
@@ -18,13 +18,19 @@ export class Photo extends BaseEntity {
   @Column({default: true})
   public: boolean;
 
-  @ManyToMany(() => Tag)
+  @ManyToMany(() => Tag, {
+    cascade: [/*"insert",*/ "remove", "soft-remove"],
+  })
   @JoinTable()
-  tags: Tag[]
+  tags: Tag[] // todo return only the id
 
-  @ManyToMany(() => User, (user) => user.protectedPhotos)
-  allowedUser: User[];
+  // @ManyToMany(() => User, (user) => user.protectedPhotos)
+  // allowedUser: User[];
+
+  // @Column({type: "uuid", nullable: true})
+  // userId: string;
 
   @ManyToOne(() => User, (user) => user.photos)
+    // @JoinColumn({name: "userId"})
   user: User
 }

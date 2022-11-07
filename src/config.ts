@@ -1,5 +1,5 @@
 import * as path from 'path';
-import {AppConfiguration} from "./config/config";
+import { AppConfiguration } from "./config/config";
 
 export const config: AppConfiguration = {
   serverPort: Number(process.env.SERVER_PORT) || 3000,
@@ -22,7 +22,7 @@ export const config: AppConfiguration = {
         url: process.env.DB_MASTER_URL,
       },
       slaves: process.env.DB_REPLICAS_URL ? [
-        { url: process.env.DB_REPLICAS_URL },
+        {url: process.env.DB_REPLICAS_URL},
       ] : [],
     } : null,
   },

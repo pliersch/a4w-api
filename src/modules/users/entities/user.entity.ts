@@ -38,11 +38,11 @@ export class User extends ExtendedBaseEntity {
   @OneToMany(() => Photo, (photo) => photo.user)
   photos: Photo[]
 
-  @ManyToMany(() => Photo, (photo) => photo.user)
-  favorites: Photo[]
-
-  @OneToMany(() => Photo, (photo) => photo.allowedUser)
-  protectedPhotos: Photo[]
+  // @ManyToMany(() => Photo, (photo) => photo.user)
+  // favorites: Photo[]
+  //
+  // @OneToMany(() => Photo, (photo) => photo.allowedUser)
+  // protectedPhotos: Photo[]
 
   // todo message createdBy is a string at the moment
   // @OneToMany(() => Message, (message) => message.)

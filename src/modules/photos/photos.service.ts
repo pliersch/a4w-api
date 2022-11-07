@@ -51,6 +51,8 @@ export class PhotosService {
 
   async removeOne(id: string): Promise<Photo> {
     const photo = await this.photoRepository.findOneBy({id: id});
+    // photo.tags = [];
+    // this.photoRepository.save(photo);
     return await this.photoRepository.remove(photo);
   }
 }
