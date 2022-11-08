@@ -1,6 +1,6 @@
-import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
-import { ExtendedBaseEntity } from "@common/entities/extended-base.entity";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { Photo } from "@modules/photos/entites/photo.entity";
+import { BaseEntity } from "@common/entities/base.entity";
 
 export enum Role {
   Admin,
@@ -15,7 +15,7 @@ export enum Status {
 }
 
 @Entity()
-export class User extends ExtendedBaseEntity {
+export class User extends BaseEntity {
 
   @Column({type: 'varchar', length: 40})
   lastName: string;
@@ -38,11 +38,12 @@ export class User extends ExtendedBaseEntity {
   @OneToMany(() => Photo, (photo) => photo.user)
   photos: Photo[]
 
-  // @ManyToMany(() => Photo, (photo) => photo.user)
-  // favorites: Photo[]
-  //
-  // @OneToMany(() => Photo, (photo) => photo.allowedUser)
-  // protectedPhotos: Photo[]
+  @ManyToMany(() => User)
+  @JoinTable()
+  allowedUser: User[];
+
+  @ManyToMany(() => Photo, (photo) => photo.user)
+  favorites: Photo[]
 
   // todo message createdBy is a string at the moment
   // @OneToMany(() => Message, (message) => message.)

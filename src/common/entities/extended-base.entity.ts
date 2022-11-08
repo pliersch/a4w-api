@@ -9,6 +9,4 @@ export abstract class ExtendedBaseEntity extends BaseEntity {
   @Column({type: 'boolean', default: true})
   isActive: boolean;
 
-  @Column({type: 'boolean', default: false})
-  isArchived: boolean;
 }

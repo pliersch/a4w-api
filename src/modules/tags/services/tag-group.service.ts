@@ -13,7 +13,6 @@ export class TagGroupService {
   ) {}
 
   async create(group: TagGroup): Promise<TagGroup> {
-    console.log('TagGroupService create: ', group)
     return await this.groupRepository.save(group);
   }
 
@@ -62,7 +61,7 @@ export class TagGroupService {
     const promises = [];
     const tag: Tag = new Tag();
     tag.name = 'Patrick';
-    await this.groupRepository.save(tag)
+    // await this.groupRepository.save(tag)
 
     const tagGroup: TagGroup = new TagGroup();
     tagGroup.name = 'Personen'

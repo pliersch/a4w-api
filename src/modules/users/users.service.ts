@@ -68,7 +68,6 @@ export class UsersService {
       email: 'hourby@gmail.com',
       status: Status.accept,
       role: Role.Admin,
-      isActive: true,
       lastLoginAt: new Date()
     }
   }
