@@ -18,6 +18,15 @@ export class TagGroupService {
 
   async findAll(): Promise<TagGroup[]> {
     return await this.groupRepository.find({
+      select: {
+        id: true,
+        name: true,
+        priority: true,
+        tags: {
+          id: true,
+          name: true
+        }
+      },
       relations: {
         tags: true,
       },

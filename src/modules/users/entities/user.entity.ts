@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { Photo } from "@modules/photos/entites/photo.entity";
 import { BaseEntity } from "@common/entities/base.entity";
 
