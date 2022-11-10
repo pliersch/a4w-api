@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Photo } from './entites/photo.entity';
 import { UpdatePhotoDto } from "./dto/update-photo.dto";
@@ -55,4 +55,8 @@ export class PhotosService {
     // this.photoRepository.save(photo);
     return await this.photoRepository.remove(photo);
   }
+
+  // async deleteMany(ids: string[]): Promise<DeleteResult> {
+  //   return this.photoRepository.delete(ids);
+  // }
 }

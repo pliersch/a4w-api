@@ -27,6 +27,7 @@ import { PhotosResultDto } from "./dto/photos-result.dto";
 import { Observable, Subject } from "rxjs";
 import { User } from "@modules/users/entities/user.entity";
 import { getPostgresDataSource } from "../../postgres.datasource";
+import { DeleteResult } from "typeorm";
 
 @Controller('photos')
 export class PhotosController {
@@ -96,8 +97,13 @@ export class PhotosController {
       res => console.error('error 600: ', res));
   }
 
+  // @Post('delmany')
+  // async deleteMany(@Body() dto: { ids: string[] }): Promise<DeleteResult> {
+  //   return this.photoService.deleteMany(dto.ids);
+  // }
+
   // only used with upload
-  @Post()
+  // @Post()
   async create(@Body() photo: Photo): Promise<Photo> {
     return this.photoService.create(photo);
   }
@@ -113,7 +119,7 @@ export class PhotosController {
     photo.user = await dataSource.manager.findOneBy(User, {id: body.userid});
     photo.fileName = file.filename;
     await this.photoProcessor.createThumb(photo.fileName);
-    const promise = this.create(photo);
+    const promise = this.photoService.create(photo);
     setTimeout(() => this.sendEvent({data: {type: 'photo_added'}} as MessageEvent), 1000);
     return promise;
   }
