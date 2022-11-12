@@ -15,8 +15,8 @@ export class Photo extends BaseEntity {
   @Column()
   recordDate: string;
 
-  @Column({default: true})
-  public: boolean;
+  @Column({default: false})
+  isPrivate: boolean;
 
   @ManyToMany(() => Tag, {
     cascade: ["insert", "remove", "soft-remove"],

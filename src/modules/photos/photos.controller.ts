@@ -27,14 +27,12 @@ import { PhotosResultDto } from "./dto/photos-result.dto";
 import { Observable, Subject } from "rxjs";
 import { User } from "@modules/users/entities/user.entity";
 import { getPostgresDataSource } from "../../postgres.datasource";
-import { DeleteResult } from "typeorm";
 
 @Controller('photos')
 export class PhotosController {
 
   constructor(private photoService: PhotosService,
               private photoProcessor: PhotoProcessorService) {
-
   }
 
   // server sent MUST BE UNDER CONSTRUCTOR. OTHERWISE, A TYPEORM ERROR WILL THROW
@@ -115,6 +113,7 @@ export class PhotosController {
     const photo = {} as Photo;
     photo.tags = JSON.parse(body.tags);
     photo.recordDate = JSON.parse(body.created);
+    photo.isPrivate = JSON.parse(body.isPrivate);
     const dataSource = await getPostgresDataSource();
     photo.user = await dataSource.manager.findOneBy(User, {id: body.userid});
     photo.fileName = file.filename;
