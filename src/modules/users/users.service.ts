@@ -14,7 +14,7 @@ export class UsersService {
   async login(user: User): Promise<User | undefined> {
     const res = this.repository.findOneBy({email: user.email});
     await res.then(val => {
-      val.lastLoginAt = new Date();
+      val.lastLogin = new Date();
       this.repository.save(val);
     })
     return res;
@@ -68,7 +68,7 @@ export class UsersService {
       email: 'hourby@gmail.com',
       status: Status.accept,
       role: Role.Admin,
-      lastLoginAt: new Date()
+      lastLogin: new Date()
     }
   }
 }

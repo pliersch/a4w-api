@@ -6,6 +6,6 @@ export abstract class BaseEntity {
   id: string;
 
   @CreateDateColumn({type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP'})
-  createdAt: Date;
+  created: Date;
 
 }

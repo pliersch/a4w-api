@@ -33,7 +33,7 @@ export class User extends BaseEntity {
   status: Status;
 
   @Column({type: 'date'})
-  lastLoginAt: Date;
+  lastLogin: Date;
 
   @OneToMany(() => Photo, (photo) => photo.user)
   photos: Photo[]
