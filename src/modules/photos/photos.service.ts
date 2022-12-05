@@ -25,16 +25,39 @@ export class PhotosService {
   }
 
   async getPhotos(pageOptionsDto: PhotosRequestDto): Promise<PhotosResultDto> {
-    const queryBuilder = this.photoRepository.createQueryBuilder('photos');
-    queryBuilder
-      .orderBy('photos.recordDate', pageOptionsDto.order)
-      .leftJoinAndSelect("photos.tags", "tags")
-      .skip(pageOptionsDto.from)
-      .take(pageOptionsDto.take);
 
-    const {entities} = await queryBuilder.getRawAndEntities();
+    const photos = await this.photoRepository.find({
+      select: {
+        id: true,
+        rating: true,
+        created: true,
+        recordDate: true,
+        isPrivate: true,
+        fileName: true,
+        tags: {
+          id: true,
+          name: true,
+          //group
+        }
+      }, relations: {
+        tags: true
+      }, order: {
+        recordDate: "ASC",
+      },
+      skip: pageOptionsDto.from,
+      take: pageOptionsDto.take
+    });
+
+    // const queryBuilder = this.photoRepository.createQueryBuilder('photos');
+    // queryBuilder
+    //   .orderBy('photos.recordDate', pageOptionsDto.order)
+    //   .leftJoinAndSelect("photos.tags", "tags")
+    //   .skip(pageOptionsDto.from)
+    //   .take(pageOptionsDto.take);
+    //
+    // const {entities} = await queryBuilder.getRawAndEntities();
     const count = await this.photoRepository.count();
-    return {photos: entities, availablePhotos: count};
+    return {photos: photos, availablePhotos: count};
   }
 
   async findOne(id: string): Promise<Photo> {
@@ -46,6 +69,7 @@ export class PhotosService {
   }
 
   async update(id: string, dto: UpdatePhotoDto) {
+
     return await this.photoRepository.update(id, dto);
   }
 

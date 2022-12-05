@@ -28,6 +28,7 @@ export class UsersController {
         result = u;
       })
     }
+    console.log('UsersController login: ', result)
     return result;
   }
 

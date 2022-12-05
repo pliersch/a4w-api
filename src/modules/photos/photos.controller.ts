@@ -70,6 +70,8 @@ export class PhotosController {
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() dto: UpdatePhotoDto) {
+
+
     return this.photoService.update(id, dto);
   }
 
@@ -119,7 +121,7 @@ export class PhotosController {
     photo.fileName = file.filename;
     await this.photoProcessor.createThumb(photo.fileName);
     const promise = this.photoService.create(photo);
-    setTimeout(() => this.sendEvent({data: {type: 'photo_added'}} as MessageEvent), 1000);
+    setTimeout(() => this.sendEvent({data: {type: 'photo_added'}} as MessageEvent), 300);
     return promise;
   }
 }
