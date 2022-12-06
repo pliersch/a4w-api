@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Photo } from './entites/photo.entity';
-import { UpdatePhotoDto } from "./dto/update-photo.dto";
 import { PhotoMetaDataDto } from "./dto/photo-meta-data-result.dto";
 import { PhotosResultDto } from "./dto/photos-result.dto";
 import { PhotosRequestDto } from "./dto/photos.request.dto";
@@ -47,15 +46,6 @@ export class PhotosService {
       skip: pageOptionsDto.from,
       take: pageOptionsDto.take
     });
-
-    // const queryBuilder = this.photoRepository.createQueryBuilder('photos');
-    // queryBuilder
-    //   .orderBy('photos.recordDate', pageOptionsDto.order)
-    //   .leftJoinAndSelect("photos.tags", "tags")
-    //   .skip(pageOptionsDto.from)
-    //   .take(pageOptionsDto.take);
-    //
-    // const {entities} = await queryBuilder.getRawAndEntities();
     const count = await this.photoRepository.count();
     return {photos: photos, availablePhotos: count};
   }
@@ -64,13 +54,35 @@ export class PhotosService {
     return await this.photoRepository.findOneBy({id: id});
   }
 
-  async replace(photo: Photo) {
-    return await this.photoRepository.update(photo.id, photo);
+  /**
+   * @param id
+   * will use to update tags
+   */
+  async findOneWithTags(id: string): Promise<Photo> {
+    return await this.photoRepository.findOne({
+      where: {
+        id: id
+      },
+      select: {
+        id: true,
+        tags: {
+          id: true,
+          name: true
+        }
+      },
+      relations: {
+        tags: true
+      }
+    });
   }
 
-  async update(id: string, dto: UpdatePhotoDto) {
+  async replace(photo: Photo) {
+    return await this.photoRepository.update(photo.id, {tags: photo.tags});
+  }
 
-    return await this.photoRepository.update(id, dto);
+  // todo calling 'update' throws error
+  async update(id: string, photo: Partial<Photo>) {
+    return await this.photoRepository.save(photo);
   }
 
   async removeOne(id: string): Promise<Photo> {

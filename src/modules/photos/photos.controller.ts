@@ -27,6 +27,8 @@ import { PhotosResultDto } from "./dto/photos-result.dto";
 import { Observable, Subject } from "rxjs";
 import { User } from "@modules/users/entities/user.entity";
 import { getPostgresDataSource } from "../../postgres.datasource";
+import { Tag } from "@modules/tags/entities/tag.entity";
+import { In } from "typeorm";
 
 @Controller('photos')
 export class PhotosController {
@@ -70,9 +72,19 @@ export class PhotosController {
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() dto: UpdatePhotoDto) {
-
-
-    return this.photoService.update(id, dto);
+    const photo = await this.photoService.findOneWithTags(id);
+    const dataSource = await getPostgresDataSource();
+    const tagRepository = await dataSource.manager.getRepository(Tag);
+    const removedTags = await tagRepository.findBy({
+      id: In(dto.removedTagIds)
+    });
+    photo.tags = photo.tags.filter(tag => !removedTags.find(tag2 => tag.id === tag2.id));
+    const addedTags = await tagRepository.findBy({
+      id: In(dto.addedTagIds)
+    });
+    photo.tags.push(...addedTags);
+    const result = await this.photoService.update(id, photo);
+    return result.tags;
   }
 
   @Delete(':id')

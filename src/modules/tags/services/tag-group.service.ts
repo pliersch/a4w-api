@@ -43,6 +43,11 @@ export class TagGroupService {
 
   async update(id: string, updateTagDto: UpdateTagGroupDto): Promise<UpdateResult> {
     console.log('TagsService update: ', updateTagDto)
+
+    // TODO
+    // FIXME the arg should be partial type of entity
+
+
     return await this.groupRepository.update(id, updateTagDto);
   }
 
