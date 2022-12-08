@@ -80,8 +80,8 @@ export class PhotosService {
     return await this.photoRepository.update(photo.id, {tags: photo.tags});
   }
 
-  // todo calling 'update' throws error
   async update(id: string, photo: Partial<Photo>) {
+    // todo calling 'update' throws error
     return await this.photoRepository.save(photo);
   }
 

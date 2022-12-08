@@ -75,16 +75,20 @@ export class PhotosController {
     const photo = await this.photoService.findOneWithTags(id);
     const dataSource = await getPostgresDataSource();
     const tagRepository = await dataSource.manager.getRepository(Tag);
-    const removedTags = await tagRepository.findBy({
-      id: In(dto.removedTagIds)
-    });
-    photo.tags = photo.tags.filter(tag => !removedTags.find(tag2 => tag.id === tag2.id));
-    const addedTags = await tagRepository.findBy({
-      id: In(dto.addedTagIds)
-    });
-    photo.tags.push(...addedTags);
-    const result = await this.photoService.update(id, photo);
-    return result.tags;
+    if (dto.addedTagIds || dto.removedTagIds) {
+      const removedTags = await tagRepository.findBy({
+        id: In(dto.removedTagIds)
+      });
+      photo.tags = photo.tags.filter(tag => !removedTags.find(tag2 => tag.id === tag2.id));
+      const addedTags = await tagRepository.findBy({
+        id: In(dto.addedTagIds)
+      });
+      photo.tags.push(...addedTags);
+    }
+    if (dto.private !== undefined) {
+      photo.isPrivate = dto.private;
+    }
+    return this.photoService.update(id, photo);
   }
 
   @Delete(':id')
