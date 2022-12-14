@@ -26,13 +26,13 @@ export class User extends BaseEntity {
   @Column({type: 'varchar', length: 100})
   email: string;
 
-  @Column({type: 'int', nullable: true})
+  @Column({type: 'int'})
   role: Role;
 
-  @Column({type: 'int', nullable: true})
+  @Column({type: 'int'})
   status: Status;
 
-  @Column({type: 'date'})
+  @Column({type: 'date', nullable: true})
   lastLogin: Date;
 
   @OneToMany(() => Photo, (photo) => photo.user)
