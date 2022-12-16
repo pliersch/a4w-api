@@ -36,8 +36,9 @@ export class UsersService {
     return this.repository.update(id, user);
   }
 
-  async removeOne(id: string) {
-    return await this.repository.remove(await this.repository.findOneBy({id: id}));
+  async remove(id: string) {
+    const user = await this.repository.findOneBy({id: id});
+    return this.repository.remove(user);
   }
 
   // async removeMany(users: User[]) {

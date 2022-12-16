@@ -42,7 +42,10 @@ export class User extends BaseEntity {
   @JoinTable()
   allowedUser: User[];
 
-  @ManyToMany(() => Photo, (photo) => photo.user)
+  @ManyToMany(() => Photo, (photo) => photo.user, {
+    cascade: ["remove", "soft-remove"],
+  })
+  @JoinTable()
   favorites: Photo[]
 
   // todo message createdBy is a string at the moment
