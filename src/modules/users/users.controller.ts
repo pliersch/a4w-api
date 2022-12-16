@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Role, Status, User } from './entities/user.entity';
 
@@ -9,6 +9,7 @@ export class UsersController {
 
   @Post()
   create(@Body() user: User) {
+    console.log('UsersController create: ', user)
     return this.usersService.create(user);
   }
 
@@ -28,7 +29,6 @@ export class UsersController {
         result = u;
       })
     }
-    console.log('UsersController login: ', result)
     return result;
   }
 
@@ -42,9 +42,9 @@ export class UsersController {
     return this.usersService.findById(id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(@Param('id') id: string, @Body() user: User) {
-    return this.usersService.update(/*id,*/ user);
+    return this.usersService.update(id, user);
   }
 
   private createGuest(user: User) {
@@ -53,4 +53,3 @@ export class UsersController {
     return this.usersService.create(user);
   }
 }
-

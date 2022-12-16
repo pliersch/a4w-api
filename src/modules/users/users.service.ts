@@ -29,11 +29,11 @@ export class UsersService {
   }
 
   async findById(id: string): Promise<User> {
-    return await this.repository.findOneBy({id: id});
+    return this.repository.findOneBy({id: id});
   }
 
-  async update(user: User) {
-    return await this.repository.update(user.id, user);
+  async update(id: string, user: User) {
+    return this.repository.update(id, user);
   }
 
   async removeOne(id: string) {
