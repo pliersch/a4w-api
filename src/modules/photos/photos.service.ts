@@ -33,12 +33,16 @@ export class PhotosService {
         recordDate: true,
         isPrivate: true,
         fileName: true,
+        user: {
+          id: true
+        },
         tags: {
           id: true,
           name: true,
           //group
         }
       }, relations: {
+        user: true,
         tags: true
       }, order: {
         recordDate: "ASC",
