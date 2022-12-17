@@ -13,7 +13,7 @@ export class UsersService {
 
   async login(user: User): Promise<User | undefined> {
     const res = this.repository.findOneBy({email: user.email});
-    await res.then(val => {
+    res.then(val => {
       val.lastLogin = new Date();
       this.repository.save(val);
     })
