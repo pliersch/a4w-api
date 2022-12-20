@@ -17,13 +17,15 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   let origin = 'http://localhost:4200';
+  let port = 3000;
 
   if (process.env.NODE_ENV === 'production') {
     origin = 'http://localhost:4300';
+    port = 3300;
   }
 
   app.enableCors({credentials: true, origin: origin});
-  await app.listen(3000);
+  await app.listen(port);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 
