@@ -16,7 +16,7 @@ export class PhotosService {
   }
 
   async create(photo: Photo): Promise<Photo> {
-    return await this.photoRepository.save(photo);
+    return this.photoRepository.save(photo);
   }
 
   async getMetaData(): Promise<PhotoMetaDataDto> {
