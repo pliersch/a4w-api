@@ -93,14 +93,13 @@ export class PhotosController {
 
   @Delete(':id')
   async removeOne(@Param('id') id: string): Promise<DeletePhotoResultDto> {
-    const promise = this.photoService.removeOne(id);
-    promise.then(photo => this.deletePhoto(photo.fileName));
+    const photo = await this.photoService.removeOne(id);
+    this.deletePhoto(photo.fileName);
     return new Promise(function (resolve) {
       resolve({id: id});
     });
   }
 
-  // todo: make process async
   private deletePhoto(fileName: string): void {
     fs.unlink('./static/images/gallery/full/' + fileName,
       res => console.error('error full: ', res));
