@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Photo } from './entites/photo.entity';
 import { PhotoMetaDataDto } from "./dto/photo-meta-data-result.dto";
@@ -55,7 +55,7 @@ export class PhotosService {
   }
 
   async findOne(id: string): Promise<Photo> {
-    return await this.photoRepository.findOneBy({id: id});
+    return this.photoRepository.findOneBy({id: id});
   }
 
   /**
@@ -63,7 +63,7 @@ export class PhotosService {
    * will use to update tags
    */
   async findOneWithTags(id: string): Promise<Photo> {
-    return await this.photoRepository.findOne({
+    return this.photoRepository.findOne({
       where: {
         id: id
       },
@@ -81,22 +81,20 @@ export class PhotosService {
   }
 
   async replace(photo: Photo) {
-    return await this.photoRepository.update(photo.id, {tags: photo.tags});
+    return this.photoRepository.update(photo.id, {tags: photo.tags});
   }
 
   async update(id: string, photo: Partial<Photo>) {
     // todo calling 'update' throws error
-    return await this.photoRepository.save(photo);
+    return this.photoRepository.save(photo);
   }
 
   async removeOne(id: string): Promise<Photo> {
     const photo = await this.photoRepository.findOneBy({id: id});
-    // photo.tags = [];
-    // this.photoRepository.save(photo);
-    return await this.photoRepository.remove(photo);
+    return this.photoRepository.remove(photo);
   }
 
-  // async deleteMany(ids: string[]): Promise<DeleteResult> {
-  //   return this.photoRepository.delete(ids);
-  // }
+  async deleteMany(ids: string[]): Promise<DeleteResult> {
+    return this.photoRepository.delete(ids);
+  }
 }

@@ -28,7 +28,7 @@ import { Observable, Subject } from "rxjs";
 import { User } from "@modules/users/entities/user.entity";
 import { getPostgresDataSource } from "../../postgres.datasource";
 import { Tag } from "@modules/tags/entities/tag.entity";
-import { In } from "typeorm";
+import { DeleteResult, In } from "typeorm";
 
 @Controller('photos')
 export class PhotosController {
@@ -112,10 +112,10 @@ export class PhotosController {
       res => console.error('error 600: ', res));
   }
 
-  // @Post('delmany')
-  // async deleteMany(@Body() dto: { ids: string[] }): Promise<DeleteResult> {
-  //   return this.photoService.deleteMany(dto.ids);
-  // }
+  @Post('delmany')
+  async deleteMany(@Body() dto: { ids: string[] }): Promise<DeleteResult> {
+    return this.photoService.deleteMany(dto.ids);
+  }
 
   // only used with upload
   // @Post()
