@@ -30,7 +30,6 @@
     "@nestjs/swagger": "^6.1.2",
     "@nestjs/typeorm": "^9.0.1",
     "cross-env": "^7.0.3",
-    "exifreader": "^4.5.0",
     "jszip": "^3.9.1",
     "nestjs-sharp": "^1.1.0",
     "pg": "^8.7.3",

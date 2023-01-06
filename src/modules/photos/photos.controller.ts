@@ -92,7 +92,7 @@ export class PhotosController {
   }
 
   @Delete(':id')
-  async removeOne(@Param('id') id: string): Promise<DeletePhotoResultDto> {
+  async deleteOne(@Param('id') id: string): Promise<DeletePhotoResultDto> {
     const photo = await this.photoService.removeOne(id);
     this.deletePhoto(photo.fileName);
     return new Promise(function (resolve) {
@@ -114,6 +114,9 @@ export class PhotosController {
 
   @Post('delmany')
   async deleteMany(@Body() dto: { ids: string[] }): Promise<DeleteResult> {
+    for (const id of dto.ids) {
+      await this.deleteOne(id);
+    }
     return this.photoService.deleteMany(dto.ids);
   }
 
@@ -127,11 +130,11 @@ export class PhotosController {
   @UseInterceptors(FileInterceptor('image', createMulterStorage()))
   @Post('file')
   async uploadFile(@Body() body: any, @UploadedFile() file: Express.Multer.File) {
+    const dataSource = await getPostgresDataSource();
     const photo = {} as Photo;
     photo.tags = JSON.parse(body.tags);
-    photo.recordDate = JSON.parse(body.created);
+    photo.recordDate = new Date(body.created);
     photo.isPrivate = JSON.parse(body.isPrivate);
-    const dataSource = await getPostgresDataSource();
     photo.user = await dataSource.manager.findOneBy(User, {id: body.userid});
     photo.fileName = file.filename;
     await this.photoProcessor.createThumb(photo.fileName);
@@ -146,8 +149,8 @@ function createMulterStorage() {
     storage: diskStorage({
       destination: './static/images/gallery/full',
       filename: function (req, file, cb) {
-        const extension = file.originalname.substring(file.originalname.lastIndexOf('.'))
-        cb(null, file.fieldname + '-' + Date.now() + extension)
+        const extension = file.originalname.substring(file.originalname.lastIndexOf('.'));
+        cb(null, file.fieldname + '-' + Date.now() + extension);
       }
     })
   }

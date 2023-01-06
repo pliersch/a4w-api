@@ -12,8 +12,8 @@ export class Photo extends BaseEntity {
   @Column({nullable: true, default: 0})
   rating: number;
 
-  @Column()
-  recordDate: string;
+  @Column({type: 'date'})
+  recordDate: Date;
 
   @Column({default: false})
   isPrivate: boolean;
