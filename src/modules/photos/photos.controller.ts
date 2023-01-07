@@ -12,14 +12,13 @@ import {
   UploadedFile,
   UseInterceptors
 } from '@nestjs/common';
-import * as fs from "fs";
 import { PhotosService } from './photos.service';
 import { Photo } from './entites/photo.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { diskStorage } from 'multer';
 import { UpdatePhotoDto } from "./dto/update-photo.dto";
-import { PhotoProcessorService } from "./photo-processor.service";
+import { PhotoFileService } from "./photo-file.service";
 import { DeletePhotoResultDto } from "./dto/delete-photo-result.dto";
 import { PageOptionsDto } from "@common/dtos/page-options.dto";
 import { PhotoMetaDataDto } from "./dto/photo-meta-data-result.dto";
@@ -34,7 +33,7 @@ import { DeleteResult, In } from "typeorm";
 export class PhotosController {
 
   constructor(private photoService: PhotosService,
-              private photoProcessor: PhotoProcessorService) {
+              private fileService: PhotoFileService) {
   }
 
   // server sent MUST BE UNDER CONSTRUCTOR. OTHERWISE, A TYPEORM ERROR WILL THROW
@@ -94,30 +93,22 @@ export class PhotosController {
   @Delete(':id')
   async deleteOne(@Param('id') id: string): Promise<DeletePhotoResultDto> {
     const photo = await this.photoService.removeOne(id);
-    this.deletePhoto(photo.fileName);
+    this.fileService.deletePhoto(photo.fileName);
     return new Promise(function (resolve) {
       resolve({id: id});
     });
   }
 
-  private deletePhoto(fileName: string): void {
-    fs.unlink('./static/images/gallery/full/' + fileName,
-      res => console.error('error full: ', res));
-    const name = fileName.substring(0, fileName.lastIndexOf('.'));
-    const name300 = name + '-300.webp';
-    const name600 = name + '-600.webp';
-    fs.unlink('./static/images/gallery/thumbs/' + name300,
-      res => console.error('error 300: ', res));
-    fs.unlink('./static/images/gallery/thumbs/' + name600,
-      res => console.error('error 600: ', res));
-  }
-
   @Post('delmany')
   async deleteMany(@Body() dto: { ids: string[] }): Promise<DeleteResult> {
+    const results: DeletePhotoResultDto[] = [];
     for (const id of dto.ids) {
-      await this.deleteOne(id);
+      results.push(await this.deleteOne(id));
     }
-    return this.photoService.deleteMany(dto.ids);
+    return {
+      raw: [],
+      affected: results.length
+    };
   }
 
   // only used with upload
@@ -137,7 +128,7 @@ export class PhotosController {
     photo.isPrivate = JSON.parse(body.isPrivate);
     photo.user = await dataSource.manager.findOneBy(User, {id: body.userid});
     photo.fileName = file.filename;
-    await this.photoProcessor.createThumb(photo.fileName);
+    await this.fileService.createThumb(photo.fileName);
     const promise = this.photoService.create(photo);
     setTimeout(() => this.sendEvent({data: {type: 'photo_added'}} as MessageEvent), 300);
     return promise;

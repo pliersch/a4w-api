@@ -4,17 +4,15 @@ import { PhotosController } from './photos.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Photo } from './entites/photo.entity';
 import { ConfigModule } from "@nestjs/config";
-import { PhotoProcessorService } from './photo-processor.service';
+import { PhotoFileService } from './photo-file.service';
 import { SharpService } from "nestjs-sharp";
-
-// import { PhotoExifReaderService } from "./photo-exif-reader.service";
 
 @Module({
   imports: [
     ConfigModule,
     TypeOrmModule.forFeature([Photo])
   ],
-  providers: [PhotosService, PhotoProcessorService, /*PhotoExifReaderService,*/ SharpService],
+  providers: [PhotosService, PhotoFileService, SharpService],
   controllers: [PhotosController]
 })
 export class PhotosModule {

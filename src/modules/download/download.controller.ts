@@ -1,14 +1,10 @@
 import { Body, Controller, Post, Response, StreamableFile } from '@nestjs/common';
-import { DownloadService } from "./download.service";
 import { createReadStream } from "fs";
 import { join, resolve } from "path";
 import * as JSZip from 'jszip';
 
 @Controller('download')
 export class DownloadController {
-
-  constructor(private readonly service: DownloadService) {
-  }
 
   @Post()
   async getFile(@Body() fileNames: string[], @Response({passthrough: true}) res): Promise<StreamableFile> {
