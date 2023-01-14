@@ -108,12 +108,11 @@ export class TagsController {
       });
 
     setTimeout(() => this.sendEvent({data: {type: 'tags_changed'}} as MessageEvent), 1000);
-    console.log('TagsController result: ', updateResult)
     return updateResult;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<Tag> {
-    return this.tagsService.removeOne(id);
+  remove(@Param('id') id: string): Promise<TagGroup> {
+    return this.groupService.remove(id);
   }
 }

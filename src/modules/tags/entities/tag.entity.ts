@@ -8,7 +8,7 @@ export class Tag extends BaseEntity {
   @Column({type: 'varchar', length: 40})
   name: string;
 
-  @ManyToOne(() => TagGroup, (group) => group.tags)
+  @ManyToOne(() => TagGroup, (group) => group.tags, {onDelete: 'CASCADE'})
   group: TagGroup
 
 }

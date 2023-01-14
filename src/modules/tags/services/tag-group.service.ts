@@ -42,12 +42,6 @@ export class TagGroupService {
   }
 
   async update(id: string, updateTagDto: UpdateTagGroupDto): Promise<UpdateResult> {
-    console.log('TagsService update: ', updateTagDto)
-
-    // TODO
-    // FIXME the arg should be partial type of entity
-
-
     return await this.groupRepository.update(id, updateTagDto);
   }
 
@@ -72,7 +66,7 @@ export class TagGroupService {
   }
 
   async _createDefaultGroupWithTags(): Promise<boolean> {
-    const promises = [];
+    // const promises = [];
     const tag: Tag = new Tag();
     tag.name = 'Patrick';
     // await this.groupRepository.save(tag)
