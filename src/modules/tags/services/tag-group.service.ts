@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { Tag } from '../entities/tag.entity';
 import { TagGroup } from "@modules/tags/entities/tag-group.entity";
 import { UpdateTagGroupDto } from "@modules/tags/dto/update-tag-group.dto";
@@ -45,8 +45,9 @@ export class TagGroupService {
     return await this.groupRepository.update(id, updateTagDto);
   }
 
-  async remove(id: string): Promise<TagGroup> {
-    return await this.groupRepository.remove(await this.findOne(id));
+  async deleteOne(id: string): Promise<DeleteResult> {
+    return this.groupRepository.delete(await this.findOne(id));
+    ;
   }
 
   //////////////////////////////////////////////////////////

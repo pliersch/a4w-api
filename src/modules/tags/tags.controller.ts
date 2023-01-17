@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Sse } from '@nestjs/common';
+import { DeleteResult } from "typeorm";
 import { TagsService } from './services/tags.service';
 import { Tag } from './entities/tag.entity';
 import { Observable, Subject } from "rxjs";
@@ -10,20 +11,16 @@ import { UpdateTagGroupResultDto } from "@modules/tags/dto/update-tag-group-resu
 
 @Controller('tags')
 export class TagsController {
-  constructor(private readonly tagsService: TagsService,
-              private readonly groupService: TagGroupService) {}
+  private changes$: Subject<MessageEvent> = new Subject()
 
   // server sent MUST BE UNDER CONSTRUCTOR. OTHERWISE, A TYPEORM ERROR WILL THROW
 
-  private changes$: Subject<MessageEvent> = new Subject()
+  constructor(private readonly tagsService: TagsService,
+              private readonly groupService: TagGroupService) {}
 
   @Sse('sse')
   sse(): Observable<MessageEvent> {
     return this.changes$.asObservable();
-  }
-
-  private sendEvent(project: MessageEvent) {
-    this.changes$.next(project)
   }
 
   @Get()
@@ -112,7 +109,11 @@ export class TagsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<TagGroup> {
-    return this.groupService.remove(id);
+  deleteOne(@Param('id') id: string): Promise<DeleteResult> {
+    return this.groupService.deleteOne(id);
+  }
+
+  private sendEvent(project: MessageEvent) {
+    this.changes$.next(project)
   }
 }
