@@ -84,8 +84,11 @@ export class PhotosController {
       });
       photo.tags.push(...addedTags);
     }
-    if (dto.private !== undefined) {
+    if (dto.private) {
       photo.isPrivate = dto.private;
+    }
+    if (dto.rating) {
+      photo.rating = dto.rating;
     }
     return this.photoService.update(id, photo);
   }

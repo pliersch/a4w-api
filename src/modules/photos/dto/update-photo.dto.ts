@@ -3,4 +3,5 @@ export class UpdatePhotoDto {
   addedTagIds?: string[];
   removedTagIds?: string[];
   private?: boolean;
+  rating?: number;
 }
