@@ -15,13 +15,16 @@ export class PhotoCountByTagImpl implements PhotoCountByTag {
 
 
 export interface PhotoMetaDataDto {
+  allPhotosCount: number;
   photoCountByTags: PhotoCountByTag[];
 }
 
 export class PhotoMetaDataDtoImpl implements PhotoMetaDataDto {
+  allPhotosCount: number;
   photoCountByTags: PhotoCountByTag[];
 
-  constructor(photoCountByTags: PhotoCountByTag[]) {
+  constructor(allPhotosCount: number, photoCountByTags: PhotoCountByTag[]) {
+    this.allPhotosCount = allPhotosCount;
     this.photoCountByTags = photoCountByTags;
   }
 }
