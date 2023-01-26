@@ -1,10 +1,18 @@
+import { getFindPhotosWithTagsOptions, getFindPhotoWithTagsOptions } from "@modules/photos/find-options";
+import { Tag } from "@modules/tags/entities/tag.entity";
 import { Injectable } from '@nestjs/common';
-import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Photo } from './entites/photo.entity';
-import { PhotoMetaDataDto } from "./dto/photo-meta-data-result.dto";
+import { DeleteResult, Repository } from 'typeorm';
+import { getPostgresDataSource } from "../../postgres.datasource";
+import {
+  PhotoCountByTag,
+  PhotoCountByTagImpl,
+  PhotoMetaDataDto,
+  PhotoMetaDataDtoImpl
+} from "./dto/photo-meta-data-result.dto";
 import { PhotosResultDto } from "./dto/photos-result.dto";
 import { PhotosRequestDto } from "./dto/photos.request.dto";
+import { Photo } from './entites/photo.entity';
 
 @Injectable()
 export class PhotosService {
@@ -20,36 +28,20 @@ export class PhotosService {
   }
 
   async getMetaData(): Promise<PhotoMetaDataDto> {
-    return new PhotoMetaDataDto(await this.photoRepository.count());
+    const dataSource = await getPostgresDataSource();
+    const tagRepository = await dataSource.manager.getRepository(Tag);
+    const tags = await tagRepository.find();
+    const tagCounts: PhotoCountByTag[] = [];
+    let count: number;
+    for (const tag of tags) {
+      count = await this.queryPhotoCountOfTag(tagRepository, tag.id);
+      tagCounts.push(new PhotoCountByTagImpl(tag.id, count))
+    }
+    return new PhotoMetaDataDtoImpl(tagCounts);
   }
 
-  async getPhotos(pageOptionsDto: PhotosRequestDto): Promise<PhotosResultDto> {
-
-    const photos = await this.photoRepository.find({
-      select: {
-        id: true,
-        rating: true,
-        created: true,
-        recordDate: true,
-        isPrivate: true,
-        fileName: true,
-        user: {
-          id: true
-        },
-        tags: {
-          id: true,
-          name: true,
-          //group
-        }
-      }, relations: {
-        user: true,
-        tags: true
-      }, order: {
-        recordDate: "ASC",
-      },
-      skip: pageOptionsDto.from,
-      take: pageOptionsDto.take
-    });
+  async getPhotos(dto: PhotosRequestDto): Promise<PhotosResultDto> {
+    const photos = await this.photoRepository.find(getFindPhotosWithTagsOptions(dto));
     const count = await this.photoRepository.count();
     return {photos: photos, availablePhotos: count};
   }
@@ -63,21 +55,7 @@ export class PhotosService {
    * will use to update tags
    */
   async findOneWithTags(id: string): Promise<Photo> {
-    return this.photoRepository.findOne({
-      where: {
-        id: id
-      },
-      select: {
-        id: true,
-        tags: {
-          id: true,
-          name: true
-        }
-      },
-      relations: {
-        tags: true
-      }
-    });
+    return this.photoRepository.findOne(getFindPhotoWithTagsOptions(id));
   }
 
   async replace(photo: Photo) {
@@ -96,5 +74,12 @@ export class PhotosService {
 
   async deleteMany(ids: string[]): Promise<DeleteResult> {
     return this.photoRepository.delete(ids);
+  }
+
+  private async queryPhotoCountOfTag(tagRepository: Repository<Tag>, tagId: string): Promise<number> {
+    return await tagRepository.createQueryBuilder('tag')
+      .leftJoinAndSelect("tag.photos", "photo")
+      .where("tag.id = :id", {id: tagId})
+      .getOne().then(tag => tag.photos.length);
   }
 }

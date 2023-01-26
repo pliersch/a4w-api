@@ -1,3 +1,4 @@
+import { PhotosRequestDto } from "@modules/photos/dto/photos.request.dto";
 import {
   Body,
   Controller,
@@ -20,7 +21,6 @@ import { diskStorage } from 'multer';
 import { UpdatePhotoDto } from "./dto/update-photo.dto";
 import { PhotoFileService } from "./photo-file.service";
 import { DeletePhotoResultDto } from "./dto/delete-photo-result.dto";
-import { PageOptionsDto } from "@common/dtos/page-options.dto";
 import { PhotoMetaDataDto } from "./dto/photo-meta-data-result.dto";
 import { PhotosResultDto } from "./dto/photos-result.dto";
 import { Observable, Subject } from "rxjs";
@@ -55,8 +55,8 @@ export class PhotosController {
   }
 
   @Get()
-  async getPhotos(@Query() pageOptionsDto: PageOptionsDto): Promise<PhotosResultDto> {
-    return this.photoService.getPhotos(pageOptionsDto);
+  async getPhotos(@Query() dto: PhotosRequestDto): Promise<PhotosResultDto> {
+    return this.photoService.getPhotos(dto);
   }
 
   @Get(':id')

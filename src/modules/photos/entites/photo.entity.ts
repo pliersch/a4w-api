@@ -18,7 +18,7 @@ export class Photo extends BaseEntity {
   @Column({default: false})
   isPrivate: boolean;
 
-  @ManyToMany(() => Tag, {
+  @ManyToMany(() => Tag, (tag) => tag.photos, {
     cascade: ["insert", "remove", "soft-remove"],
   })
   @JoinTable()
