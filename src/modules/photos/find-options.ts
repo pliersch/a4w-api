@@ -1,6 +1,6 @@
 import { PhotosRequestDto } from "@modules/photos/dto/photos.request.dto";
 import { Photo } from "@modules/photos/entites/photo.entity";
-import { FindManyOptions, FindOneOptions } from "typeorm";
+import { FindManyOptions, FindOneOptions, MoreThan } from "typeorm";
 
 export function getFindPhotosWithTagsOptions(dto: PhotosRequestDto): FindManyOptions<Photo> {
   return {
@@ -13,13 +13,16 @@ export function getFindPhotosWithTagsOptions(dto: PhotosRequestDto): FindManyOpt
       fileName: true,
       user: {
         id: true
-      },
-      tags: {
+      }, tags: {
         id: true,
         name: true,
         //group
       }
-    }, relations: {
+    },
+    // where: {
+    //   rating: MoreThan(4),
+    // },
+    relations: {
       user: true,
       tags: true
     }, order: {
@@ -30,7 +33,7 @@ export function getFindPhotosWithTagsOptions(dto: PhotosRequestDto): FindManyOpt
   }
 }
 
-export function getFindPhotoWithTagsOptions(id: string): FindOneOptions<Photo> {
+export function findPhotoByIdWithTagsOptions(id: string): FindOneOptions<Photo> {
   return {
     where: {
       id: id
