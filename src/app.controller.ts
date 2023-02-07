@@ -11,7 +11,6 @@ export class AppController {
               private readonly usersService: UsersService,
   ) {
     this.init();
-    console.log('AppController constructor: ',)
     // console.log('env: ', process.env.NODE_ENV)
   }
 
