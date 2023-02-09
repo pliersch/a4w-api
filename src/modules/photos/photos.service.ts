@@ -1,17 +1,17 @@
-import { getFindPhotosWithTagsOptions, findPhotoByIdWithTagsOptions } from "@modules/photos/find-options";
+import { PhotosRequestDto } from "@modules/photos/dto/photo.dto";
+import { findPhotoByIdWithTagsOptions, getFindPhotosWithTagsOptions } from "@modules/photos/find-options";
 import { Tag } from "@modules/tags/entities/tag.entity";
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ArrayContainedBy, ArrayContains, DeleteResult, In, MoreThan, Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { getPostgresDataSource } from "../../postgres.datasource";
 import {
   PhotoCountByTag,
   PhotoCountByTagImpl,
   PhotoMetaDataDto,
-  PhotoMetaDataDtoImpl
-} from "./dto/photo-meta-data-result.dto";
-import { PhotosResultDto } from "./dto/photos-result.dto";
-import { PhotosRequestDto } from "./dto/photos.request.dto";
+  PhotoMetaDataDtoImpl,
+  PhotosResultDto
+} from "./dto/photo.dto";
 import { Photo } from './entites/photo.entity';
 
 @Injectable()
@@ -38,15 +38,15 @@ export class PhotosService {
       count = await this.queryPhotoCountOfTag(tagRepository, tag.id);
       tagCounts.push(new PhotoCountByTagImpl(tag.id, count))
     }
-    console.log('PhotosService getMetaData: ',tagCounts)
+    // console.log('PhotosService getMetaData: ',tagCounts)
     return new PhotoMetaDataDtoImpl(allPhotosCount, tagCounts);
   }
 
   async getPhotos(dto: PhotosRequestDto): Promise<PhotosResultDto> {
-    const dataSource = await getPostgresDataSource();
-    const tagRepository = await dataSource.manager.getRepository(Tag);
-    const tagId = '0d69c1f6-bd3c-46f6-8af5-c3b0667e4ed5';
-    const tag = await tagRepository.findOneBy({id: tagId});
+    // const dataSource = await getPostgresDataSource();
+    // const tagRepository = await dataSource.manager.getRepository(Tag);
+    // const tagId = '0d69c1f6-bd3c-46f6-8af5-c3b0667e4ed5';
+    // const tag = await tagRepository.findOneBy({id: tagId});
     // console.log('tag: ', tag)
     // await this.photoRepository.createQueryBuilder('photo')
     //   // .leftJoinAndSelect("tag.photos", "photo")
@@ -71,14 +71,14 @@ export class PhotosService {
     //   .addGroupBy("user.id");
 
 
-/*    const photos1 = await this.photoRepository
-      .createQueryBuilder("photo")
-      .leftJoin("photo.tags", "tags")
-      .leftJoin("tags.name", "name")
-      .where("photo.rating=5")
-      .getMany();
+    /*    const photos1 = await this.photoRepository
+          .createQueryBuilder("photo")
+          .leftJoin("photo.tags", "tags")
+          .leftJoin("tags.name", "name")
+          .where("photo.rating=5")
+          .getMany();
 
-    console.log('PhotosService getPhotos: ', photos1)*/
+        console.log('PhotosService getPhotos: ', photos1)*/
 
 
     // const res = await this.photoRepository

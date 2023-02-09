@@ -1,4 +1,12 @@
-import { PhotosRequestDto } from "@modules/photos/dto/photos.request.dto";
+import {
+  DeletePhotoResultDto,
+  PhotoMetaDataDto,
+  PhotosRequestDto,
+  PhotosResultDto,
+  UpdatePhotoDto
+} from "@modules/photos/dto/photo.dto";
+import { Tag } from "@modules/tags/entities/tag.entity";
+import { User } from "@modules/users/entities/user.entity";
 import {
   Body,
   Controller,
@@ -13,21 +21,16 @@ import {
   UploadedFile,
   UseInterceptors
 } from '@nestjs/common';
-import { PhotosService } from './photos.service';
-import { Photo } from './entites/photo.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { diskStorage } from 'multer';
-import { UpdatePhotoDto } from "./dto/update-photo.dto";
-import { PhotoFileService } from "./photo-file.service";
-import { DeletePhotoResultDto } from "./dto/delete-photo-result.dto";
-import { PhotoMetaDataDto } from "./dto/photo-meta-data-result.dto";
-import { PhotosResultDto } from "./dto/photos-result.dto";
+
 import { Observable, Subject } from "rxjs";
-import { User } from "@modules/users/entities/user.entity";
-import { getPostgresDataSource } from "../../postgres.datasource";
-import { Tag } from "@modules/tags/entities/tag.entity";
 import { DeleteResult, In } from "typeorm";
+import { getPostgresDataSource } from "../../postgres.datasource";
+import { Photo } from './entites/photo.entity';
+import { PhotoFileService } from "./photo-file.service";
+import { PhotosService } from './photos.service';
 
 @Controller('photos')
 export class PhotosController {

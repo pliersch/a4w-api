@@ -1,6 +1,6 @@
-import { PhotosRequestDto } from "@modules/photos/dto/photos.request.dto";
+import { PhotosRequestDto } from "@modules/photos/dto/photo.dto";
 import { Photo } from "@modules/photos/entites/photo.entity";
-import { FindManyOptions, FindOneOptions, MoreThan } from "typeorm";
+import { FindManyOptions, FindOneOptions } from "typeorm";
 
 export function getFindPhotosWithTagsOptions(dto: PhotosRequestDto): FindManyOptions<Photo> {
   return {

@@ -1,3 +1,35 @@
+import { Photo } from "@modules/photos/entites/photo.entity";
+
+export class PhotosRequestDto {
+  readonly from?: number = 1;
+  readonly take?: number = 60;
+  readonly tagIds: string[] = [];
+}
+
+export interface PhotosResultDto {
+  photos: Photo[];
+  availablePhotos: number;
+}
+
+export class UpdatePhotoDto {
+  id: string;
+  addedTagIds?: string[];
+  removedTagIds?: string[];
+  private?: boolean;
+  rating?: number;
+}
+
+export class UpdatePhotoResultDto extends UpdatePhotoDto {
+  // id: string;
+  // addedTagIds?: string[];
+  // removedTagIds?: string[];
+  // private?: boolean;
+}
+
+export class DeletePhotoResultDto {
+  id: string;
+}
+
 export interface PhotoCountByTag {
   tagId: string;
   count: number;
@@ -12,7 +44,6 @@ export class PhotoCountByTagImpl implements PhotoCountByTag {
     this.count = count;
   }
 }
-
 
 export interface PhotoMetaDataDto {
   allPhotosCount: number;
