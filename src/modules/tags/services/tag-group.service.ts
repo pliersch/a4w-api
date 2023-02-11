@@ -1,9 +1,9 @@
+import { UpdateTagGroupDto } from "@modules/tags/dto/update-tag-group.dto";
+import { TagGroup } from "@modules/tags/entities/tag-group.entity";
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { Tag } from '../entities/tag.entity';
-import { TagGroup } from "@modules/tags/entities/tag-group.entity";
-import { UpdateTagGroupDto } from "@modules/tags/dto/update-tag-group.dto";
 
 @Injectable()
 export class TagGroupService {
@@ -37,17 +37,17 @@ export class TagGroupService {
     return this.groupRepository.findOneBy({id: id});
   }
 
-  async findOne(id: string): Promise<TagGroup> {
-    return await this.groupRepository.findOneBy({id: id});
-  }
+  // async findOne(id: string): Promise<TagGroup> {
+  //   return this.groupRepository.findOneBy({id: id});
+  // }
 
   async update(id: string, updateTagDto: UpdateTagGroupDto): Promise<UpdateResult> {
-    return await this.groupRepository.update(id, updateTagDto);
+    return this.groupRepository.update(id, updateTagDto);
   }
 
   async deleteOne(id: string): Promise<DeleteResult> {
-    return this.groupRepository.delete(await this.findOne(id));
-    ;
+    // return this.groupRepository.delete(await this.findById(id));
+    return this.groupRepository.delete(id);
   }
 
   //////////////////////////////////////////////////////////

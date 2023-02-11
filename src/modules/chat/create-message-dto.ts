@@ -1,5 +1,6 @@
-export class CreateMessageDto {
+export interface CreateMessageDto {
   userId: string;
+  // chatId: string;
   text: string;
-  pictures: string[];
+  pictures: File[];
 }

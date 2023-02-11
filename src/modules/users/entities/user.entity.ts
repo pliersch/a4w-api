@@ -1,6 +1,7 @@
-import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
-import { Photo } from "@modules/photos/entites/photo.entity";
 import { BaseEntity } from "@common/entities/base.entity";
+import { Message } from "@modules/chat/message.entity";
+import { Photo } from "@modules/photos/entites/photo.entity";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 
 export enum Role {
   Admin,
@@ -38,6 +39,9 @@ export class User extends BaseEntity {
   @OneToMany(() => Photo, (photo) => photo.user)
   photos: Photo[]
 
+  @OneToMany(() => Message, (message) => message.user)
+  messages: Message[]
+
   @ManyToMany(() => User)
   @JoinTable()
   allowedUser: User[];
@@ -48,7 +52,4 @@ export class User extends BaseEntity {
   @JoinTable()
   favorites: Photo[]
 
-  // todo message createdBy is a string at the moment
-  // @OneToMany(() => Message, (message) => message.)
-  // messages: Message[]
 }

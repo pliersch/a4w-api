@@ -1,12 +1,9 @@
-import { Body, Injectable, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { diskStorage } from "multer";
 
 import { Repository, UpdateResult } from 'typeorm';
 import { Message } from './message.entity';
-import { FileInterceptor } from "@nestjs/platform-express";
-import { Express } from "express";
-import { diskStorage } from "multer";
-import { Photo } from "@modules/photos/entites/photo.entity";
 
 
 @Injectable()
@@ -23,7 +20,18 @@ export class ChatService {
   }
 
   async findAll(): Promise<Message[]> {
-    return await this.repository.find();
+    return await this.repository.find({
+      select: {
+        user: {
+          id: true,
+          lastName: true,
+          givenName: true
+        }
+      },
+      relations: {
+        user: true
+      }
+    });
   }
 
   async findOne(id: string): Promise<Message> {
