@@ -30,6 +30,9 @@ export class ChatService {
       },
       relations: {
         user: true
+      },
+      order: {
+        created: 'ASC'
       }
     });
   }

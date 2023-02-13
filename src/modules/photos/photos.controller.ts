@@ -40,7 +40,6 @@ export class PhotosController {
   }
 
   // server sent MUST BE UNDER CONSTRUCTOR. OTHERWISE, A TYPEORM ERROR WILL THROW
-
   @Sse('sse')
   sse(): Observable<MessageEvent> {
     return this.changes$.asObservable();
@@ -48,8 +47,8 @@ export class PhotosController {
 
   private changes$: Subject<MessageEvent> = new Subject()
 
-  private sendEvent(project: MessageEvent) {
-    this.changes$.next(project)
+  private sendEvent(event: MessageEvent) {
+    this.changes$.next(event)
   }
 
   @Get('meta')
