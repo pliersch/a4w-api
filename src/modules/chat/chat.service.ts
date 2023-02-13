@@ -24,7 +24,7 @@ export class ChatService {
       select: {
         user: {
           id: true,
-          lastName: true,
+          surName: true,
           givenName: true
         }
       },

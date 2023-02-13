@@ -19,7 +19,7 @@ export enum Status {
 export class User extends BaseEntity {
 
   @Column({type: 'varchar', length: 40})
-  lastName: string;
+  surName: string;
 
   @Column({type: 'varchar', length: 40})
   givenName: string;

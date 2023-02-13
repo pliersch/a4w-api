@@ -11,8 +11,17 @@ export class UsersService {
     private readonly repository: Repository<User>,
   ) { }
 
-  async login(user: User): Promise<User | undefined> {
+  async signin(user: User): Promise<User | undefined> {
     const res = this.repository.findOneBy({email: user.email});
+    res.then(val => {
+      val.lastLogin = new Date();
+      this.repository.save(val);
+    })
+    return res;
+  }
+
+  async login(id: string): Promise<User | undefined> {
+    const res = this.repository.findOneBy({id: id});
     res.then(val => {
       val.lastLogin = new Date();
       this.repository.save(val);
@@ -65,7 +74,7 @@ export class UsersService {
   _getSystemUser(): Partial<User> {
     return {
       givenName: 'Patrick',
-      lastName: 'Liersch',
+      surName: 'Liersch',
       email: 'hourby@gmail.com',
       status: Status.accept,
       role: Role.Admin,
