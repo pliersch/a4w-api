@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -9,7 +9,7 @@ async function bootstrap() {
 
   const options = new DocumentBuilder()
     .setTitle('A4W')
-    // .setDescription('The cats API description')
+    // .setDescription('The description')
     .setVersion('1.0')
     .addTag('a4w')
     .build();
@@ -25,6 +25,7 @@ async function bootstrap() {
   }
 
   app.enableCors({credentials: true, origin: origin});
+  // app.useWebSocketAdapter(new A4WAdapter(app));
   await app.listen(port);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }

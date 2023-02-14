@@ -1,7 +1,7 @@
+import { TagGroupService } from "@modules/tags/services/tag-group.service";
+import { UsersService } from "@modules/users/users.service";
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { UsersService } from "@modules/users/users.service";
-import { TagGroupService } from "@modules/tags/services/tag-group.service";
 
 @Controller()
 export class AppController {

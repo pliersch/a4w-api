@@ -1,18 +1,18 @@
-import { Module } from '@nestjs/common';
-import { config } from './config';
-import { join } from 'path';
-import * as configuration from "./config/config.develop";
-import { ServeStaticModule } from '@nestjs/serve-static';
 import { ChatModule } from "@modules/chat/chat.module";
 import { DownloadModule } from "@modules/download/download.module";
 import { PhotosModule } from "@modules/photos/photos.module";
-import { SharpModule } from "nestjs-sharp";
 import { TagsModule } from "@modules/tags/tags.module";
+import { TestModule } from "@modules/test/test.module";
 import { UsersModule } from "@modules/users/users.module";
+import { Module } from '@nestjs/common';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SharpModule } from "nestjs-sharp";
+import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TestModule } from "@modules/test/test.module";
+import { config } from './config';
+import * as configuration from "./config/config.develop";
 
 @Module({
   imports: [
@@ -21,6 +21,7 @@ import { TestModule } from "@modules/test/test.module";
     ChatModule,
     TagsModule,
     DownloadModule,
+    // SocketModule,
     TestModule,
     // ConfigModule.forRoot({isGlobal: true, load: [configuration]}),
     SharpModule,
@@ -30,7 +31,7 @@ import { TestModule } from "@modules/test/test.module";
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService/*, SocketGateway*/],
 })
 
 export class AppModule {

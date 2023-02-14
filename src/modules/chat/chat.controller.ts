@@ -33,8 +33,17 @@ export class ChatController {
     msg.text = dto.text;
     msg.user = user;
     msg.fileNames = null;
-    setTimeout(() => this.sendEvent({data: {type: 'message_added'}} as MessageEvent), 500);
-    return this.service.create(msg);
+    const message = await this.service.create(msg);
+    // don't send user obj, only user id
+    const payload = await this.service.findOne(message.id);
+    const event = {
+      data: {
+        type: 'message_added',
+        payload: payload
+      }
+    };
+    setTimeout(() => this.sendEvent(event as MessageEvent), 300);
+    return message;
   }
 
   @Get()

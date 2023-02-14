@@ -38,7 +38,24 @@ export class ChatService {
   }
 
   async findOne(id: string): Promise<Message> {
-    return await this.repository.findOneBy({id: id});
+    return await this.repository.findOne({
+      where: {
+        id: id
+      },
+      select: {
+        user: {
+          id: true,
+          surName: true,
+          givenName: true
+        }
+      },
+      relations: {
+        user: true
+      },
+      order: {
+        created: 'ASC'
+      }
+    });
   }
 
   async update(message: Message): Promise<UpdateResult> {
