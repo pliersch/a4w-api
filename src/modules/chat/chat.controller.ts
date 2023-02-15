@@ -20,7 +20,6 @@ export class ChatController {
   private changes$: Subject<MessageEvent> = new Subject()
 
   private sendEvent(event: MessageEvent) {
-    console.log('ChatController sendEvent: ', event)
     this.changes$.next(event)
   }
 
@@ -34,7 +33,7 @@ export class ChatController {
     msg.user = user;
     msg.fileNames = null;
     const message = await this.service.create(msg);
-    // don't send user obj, only user id
+    // don't send user obj, only user id.
     const payload = await this.service.findOne(message.id);
     const event = {
       data: {
