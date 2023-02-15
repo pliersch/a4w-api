@@ -1,3 +1,4 @@
+import { QueryMessagesDto } from "@modules/chat/chat.model";
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { diskStorage } from "multer";
@@ -19,7 +20,7 @@ export class ChatService {
     return await this.repository.save(message);
   }
 
-  async findAll(): Promise<Message[]> {
+  async findAll(dto: QueryMessagesDto): Promise<Message[]> {
     return await this.repository.find({
       select: {
         user: {
@@ -33,7 +34,9 @@ export class ChatService {
       },
       order: {
         created: 'ASC'
-      }
+      },
+      skip: dto.from,
+      take: dto.take
     });
   }
 

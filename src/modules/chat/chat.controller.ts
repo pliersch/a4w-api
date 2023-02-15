@@ -1,6 +1,6 @@
-import { CreateMessageDto } from "@modules/chat/create-message-dto";
+import { CreateMessageDto, QueryMessagesDto } from "@modules/chat/chat.model";
 import { User } from "@modules/users/entities/user.entity";
-import { Body, Controller, Delete, Get, Param, Post, Put, Sse } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Sse } from '@nestjs/common';
 import { Observable, Subject } from "rxjs";
 import { getPostgresDataSource } from "../../postgres.datasource";
 import { ChatService } from './chat.service';
@@ -46,8 +46,8 @@ export class ChatController {
   }
 
   @Get()
-  findAll() {
-    return this.service.findAll();
+  findAll(@Query() dto: QueryMessagesDto) {
+    return this.service.findAll(dto);
   }
 
   @Put(':id')
