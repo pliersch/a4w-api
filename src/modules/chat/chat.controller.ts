@@ -1,6 +1,21 @@
 import { CreateMessageDto, QueryMessagesDto } from "@modules/chat/chat.model";
 import { User } from "@modules/users/entities/user.entity";
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Sse } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  Sse,
+  UploadedFile,
+  UseInterceptors
+} from '@nestjs/common';
+import { FileInterceptor } from "@nestjs/platform-express";
+import { Express } from "express";
+import { diskStorage } from "multer";
 import { Observable, Subject } from "rxjs";
 import { getPostgresDataSource } from "../../postgres.datasource";
 import { ChatService } from './chat.service';
@@ -31,7 +46,6 @@ export class ChatController {
     const msg: Message = new Message();
     msg.text = dto.text;
     msg.user = user;
-    msg.fileNames = null;
     const message = await this.service.create(msg);
     // don't send user obj, only user id.
     const payload = await this.service.findOne(message.id);
@@ -58,5 +72,45 @@ export class ChatController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.service.removeOne(id);
+  }
+
+  // body is type 'any' because we must parse the json string :(
+  @UseInterceptors(FileInterceptor('image', createMulterStorage()))
+  @Post('pictures')
+  async uploadFile(@Body() dto: any, @UploadedFile() file: Express.Multer.File) {
+    const dataSource = await getPostgresDataSource();
+    const userRepository = await dataSource.manager.getRepository(User);
+    const user = await userRepository.findOneBy({id: dto.userId});
+    const msg: Message = new Message();
+    msg.text = dto.text;
+    msg.user = user;
+    msg.fileNames = [file.filename];
+    const message = await this.service.create(msg);
+
+    // todo thumbs
+    // await this.fileService.createThumb(photo.fileName);
+    // don't send user obj, only user id.
+    const payload = await this.service.findOne(message.id);
+    const event = {
+      data: {
+        type: 'message_added',
+        payload: payload
+      }
+    };
+    setTimeout(() => this.sendEvent(event as MessageEvent), 300);
+    return message;
+  }
+}
+
+// todo duplicated (PhotosController) create a service?!
+function createMulterStorage() {
+  return {
+    storage: diskStorage({
+      destination: './static/images/chat',
+      filename: function (req, file, cb) {
+        const extension = file.originalname.substring(file.originalname.lastIndexOf('.'));
+        cb(null, file.fieldname + '-' + Date.now() + extension);
+      }
+    })
   }
 }

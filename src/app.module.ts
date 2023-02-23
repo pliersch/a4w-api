@@ -2,7 +2,6 @@ import { ChatModule } from "@modules/chat/chat.module";
 import { DownloadModule } from "@modules/download/download.module";
 import { PhotosModule } from "@modules/photos/photos.module";
 import { TagsModule } from "@modules/tags/tags.module";
-import { TestModule } from "@modules/test/test.module";
 import { UsersModule } from "@modules/users/users.module";
 import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -22,7 +21,6 @@ import * as configuration from "./config/config.develop";
     TagsModule,
     DownloadModule,
     // SocketModule,
-    TestModule,
     // ConfigModule.forRoot({isGlobal: true, load: [configuration]}),
     SharpModule,
     TypeOrmModule.forRoot(config.database),

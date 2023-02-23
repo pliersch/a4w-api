@@ -81,16 +81,3 @@ export class ChatService {
   //   return this.create(photo);
   // }
 }
-
-// todo duplicated (PhotosController) create a service?!
-function createMulterStorage() {
-  return {
-    storage: diskStorage({
-      destination: './uploads',
-      filename: function (req, file, cb) {
-        const extension = file.originalname.substring(file.originalname.lastIndexOf('.'))
-        cb(null, file.fieldname + '-' + Date.now() + extension)
-      }
-    })
-  }
-}
