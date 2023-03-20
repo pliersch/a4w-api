@@ -25,8 +25,9 @@ export function getFindPhotosWithTagsOptions(dto: PhotosRequestDto): FindManyOpt
     relations: {
       user: true,
       tags: true
-    }, order: {
-      recordDate: "ASC",
+    },
+    order: {
+      recordDate: "DESC",
     },
     skip: dto.from,
     take: dto.take
