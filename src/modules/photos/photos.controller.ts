@@ -6,7 +6,7 @@ import {
   UpdatePhotoDto
 } from "@modules/photos/dto/photo.dto";
 import { Tag } from "@modules/tags/entities/tag.entity";
-import { User } from "@modules/users/entities/user.entity";
+import { Role, User } from "@modules/users/entities/user.entity";
 import {
   Body,
   Controller,
@@ -31,6 +31,8 @@ import { getPostgresDataSource } from "../../postgres.datasource";
 import { Photo } from './entites/photo.entity';
 import { PhotoFileService } from "./photo-file.service";
 import { PhotosService } from './photos.service';
+
+const DELETE_ALL_KEY = 'very_special_key';
 
 @Controller('photos')
 export class PhotosController {
@@ -114,6 +116,15 @@ export class PhotosController {
       raw: [],
       affected: results.length
     };
+  }
+
+  @Post('deleteAll')
+  async deleteAll(@Body() dto: { key: string, user: User }): Promise<void> {
+    if (dto.key !== DELETE_ALL_KEY && dto.user.role !== Role.Admin) {
+      console.log('PhotosController deleteAll: DELETE ALL PHOTOS NOT ALLOWED', dto);
+    }
+    await this.photoService.deleteAll();
+    this.fileService.deleteAllPhotos();
   }
 
   // only used with upload

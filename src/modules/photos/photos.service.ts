@@ -144,6 +144,10 @@ export class PhotosService {
     return this.photoRepository.remove(photo);
   }
 
+  deleteAll() {
+    return this.photoRepository.delete({});
+  }
+
   async deleteMany(ids: string[]): Promise<DeleteResult> {
     return this.photoRepository.delete(ids);
   }

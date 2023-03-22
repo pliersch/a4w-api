@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import * as fs from 'fs'
 import { SharpService } from "nestjs-sharp";
 import * as path from "path";
-import * as fs from 'fs'
 
 @Injectable()
 export class PhotoFileService {
@@ -62,6 +62,24 @@ export class PhotoFileService {
       const thumbName = name + '-' + size + '.webp';
       this.deleteFile(this.pathThumbs, thumbName);
     }
+  }
+
+  deleteAllPhotos(): void {
+    const directories = [this.pathFull, this.pathThumbs];
+    directories.forEach(directory => {
+      fs.readdir(directory, (err, files) => {
+        if (err) {
+          throw err;
+        }
+        for (const file of files) {
+          fs.unlink(path.join(directory, file), (err) => {
+            if (err) {
+              throw err;
+            }
+          });
+        }
+      });
+    })
   }
 
   private deleteFile(path: string, fileName: string): void {
