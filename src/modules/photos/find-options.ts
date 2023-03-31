@@ -12,7 +12,9 @@ export function getFindPhotosWithTagsOptions(dto: PhotosRequestDto): FindManyOpt
       isPrivate: true,
       fileName: true,
       user: {
-        id: true
+        id: true,
+        givenName: true,
+        surName: true,
       }, tags: {
         id: true,
         name: true,
