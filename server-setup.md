@@ -1,28 +1,51 @@
-**Root PW**  
-19v1kSEWfXBEcfT  
-  
+##########################################################################
+
+# ubuntu 22.04.2 lts (jammy jellyfish) - minimal             #
+
+##########################################################################
+
+System information:
+
+IP address:     5.252.227.22
+Hostname:       v2202003115976111031.megasrv.de
+root Passwort pyEuSExbNn2tW2R
+
+SSH key fingerprints:
+
+3072 SHA256:/QIy1QzmKk5hSN3JSvrlhfnFzYz5lJYmwEjbN9zKu2c (RSA)
+256 SHA256:Pq+qoSb6qWB852L0BmdWN72DGZRb0SsefS5NwHCYZlc (ECDSA)
+256 SHA256:Qpm1usdUIsKhKx5wuUygLIf4rsObiukoolSVFdw5DrU (ED25519)
+3072 MD5:b0:d5:ac:c5:31:64:06:87:94:3a:68:2c:43:95:63:8b (RSA)
+256 MD5:ae:5f:70:37:32:29:3e:16:7a:06:79:90:b9:e6:7c:8e (ECDSA)
+256 MD5:2b:d9:eb:91:b8:f0:b7:63:da:8b:79:86:47:ca:7a:b5 (ED25519)
+
+**User**  
+hourby pw: foo
+pliersch pw:foo
+patrick 1q2w3e4r
+
 **System updaten**  
 `sudo apt-get update`  
-`sudo apt-get upgrade` (?)  
-  
+`sudo apt-get upgrade` (?)
+
 **SSH**  
 `apt-get install openssh-server` (falls bereits installiert, passiert nix)  
-`adduser --shell /bin/bash --ingroup 'ssh' {USER_NAME}`  
-`sudo usermod -aG sudo {USER_NAME}`  Muss root ausführen!(?)
-  
+`groupadd ssh`  
+`sudo adduser --shell /bin/bash --ingroup 'ssh' {USER_NAME}`  
+`usermod -aG sudo {USER_NAME}`  Muss root ausführen!(?) user in group "sudo" aufnehmen
+
 `ssh-keygen -t rsa -b 4096` (auf Client mit Git-Bash/MING Bash)  
-`ssh-copy-id {USER_NAME}@ip-adresse` (auf Client mit Git-Bash/MING Bash)  
-In SmarTTY auf open-ssh umstellen  
+`ssh-copy-id -i ~/.ssh/mykey user@host` (auf Client mit Git-Bash/MING Bash)  
+In SmarTTY auf open-ssh umstellen
 
 **keine pw-eingabe bei sudo**
-su
+su root
 touch /etc/sudoers.d/{USER_NAME}
 chmod 0440 /etc/sudoers.d/{USER_NAME}
 nano /etc/sudoers.d/{USER_NAME}
 einfügen:
 `# User privilege specification`
-`{USER_NAME} ALL=NOPASSWD: ALL`  
-
+`{USER_NAME} ALL=NOPASSWD: ALL`
 
 **Server absichern**  
 `sudo nano /etc/ssh/sshd_config` (Datei öffnen)  
@@ -31,22 +54,22 @@ PubkeyAuthentication yes
 ChallengeResponseAuthentication no  
 Port 28831 (ein freier Port)  
 PerminRootLogin no  
-AllowUsers {USER_NAME}  
+AllowUsers {USER_NAME}
 
 Hetzner: ????
-	Port 22
-	Protocol 2
-	AllowUsers user1 user2
-	LoginGraceTime 2m
-	PermitRootLogin no
-	StrictModes yes
-	MaxAuthTries 1
-	PubkeyAuthentication yes
-	AuthorizedKeysFile      .ssh/authorized_keys
-	RhostsRSAAuthentication no
-	PasswordAuthentication no
-	PermitEmptyPasswords no
-	UsePAM yes
+Port 22
+Protocol 2
+AllowUsers user1 user2
+LoginGraceTime 2m
+PermitRootLogin no
+StrictModes yes
+MaxAuthTries 1
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
+RhostsRSAAuthentication no
+PasswordAuthentication no
+PermitEmptyPasswords no
+UsePAM yes
 
 `sudo systemctl reload sshd`
 
@@ -58,30 +81,29 @@ Hetzner: ????
 `ufw enable`
 `ufw status`
 
-
-**Software**  
+**Software**
 
 `sudo apt install curl`
 
- NGINX Server
- https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-debian-10
+NGINX Server
+https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-debian-10
 `sudo service apache2 stop`
 `sudo apt-get install nginx`
 `sudo systemctl enable nginx`
 `sudo service nginx configtest` (test config)
 oder `sudo nginx -t -c /etc/nginx/nginx.conf`
 `cp /etc/nginx/sites-available/default /etc/nginx/sites-available/YOUR_SITE` duplicate default config  
-`sudo ln -s /etc/nginx/sites-available/YOUR_SITE /etc/nginx/sites-enabled/`  enable a site  
+`sudo ln -s /etc/nginx/sites-available/YOUR_SITE /etc/nginx/sites-enabled/`  enable a site
 
 Remove an nginx Config from Sites-Enabled
 `cd /etc/nginx/sites-enabled`
 `sudo rm your-site-config`
 `sudo service nginx reload`
 
-
 NodeJS
 https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-debian-10
-https://github.com/nodesource/distributions/blob/master/README.md#deb
+
+https://github.com/nodesource/distributions :
 `curl -sL https://deb.nodesource.com/setup_13.x | sudo bash -`  
 `sudo apt-get install -y nodejs`
 `sudo apt install build-essential`
@@ -94,8 +116,7 @@ Yarn
 PM2
 `sudo npm install pm2 -g`
 `pm2 start hello.js` (hello.js is entry point of example)
-`sudo pm2 startup`
-`sudo systemctl start pm2-root.service`
+`pm2 startup`
 `systemctl status pm2-root.service`
 Samples
 `pm2 stop app_name_or_id`
@@ -108,16 +129,20 @@ Setting Up Nginx as a Reverse Proxy Server
 `sudo nano /etc/nginx/sites-available/your_domain`
 `server {
 ...
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
+location / {
+proxy_pass http://localhost:3000;
+proxy_http_version 1.1;
+proxy_set_header Upgrade $http_upgrade;
+proxy_set_header Connection 'upgrade';
+proxy_set_header Host $host;
+proxy_cache_bypass $http_upgrade;
+}
 ...
 }`
+
+PostrGres
+
+`apt install postgresql postgresql-client`
 
 MongoDB
 https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/
@@ -140,8 +165,23 @@ Git
 `sudo mkdir -p /var/www/your_domain/html`
 
 **SSL**
-https://letsencrypt.org/de/
-https://certbot.eff.org/lets-encrypt/debianbuster-nginx
+https://letsencrypt.org/de/ (not needed)
+https://certbot.eff.org/instructions
+
+----------------
+Requesting a certificate for apps4web.de
+
+Successfully received certificate.
+Certificate is saved at: /etc/letsencrypt/live/apps4web.de/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/apps4web.de/privkey.pem
+This certificate expires on 2023-10-05.
+These files will be updated when the certificate renews.
+Certbot has set up a scheduled task to automatically renew this certificate in the background.
+
+Deploying certificate
+Successfully deployed certificate for apps4web.de to /etc/nginx/sites-enabled/a4w
+Congratulations! You have successfully enabled HTTPS on https://apps4web.de
+------------------
 
 Log bei Installation von certbot
 Please choose whether or not to redirect HTTP traffic to HTTPS, removing HTTP access.
@@ -162,20 +202,21 @@ https://www.ssllabs.com/ssltest/analyze.html?d=apps4web.de
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 IMPORTANT NOTES:
- - Congratulations! Your certificate and chain have been saved at:
-   /etc/letsencrypt/live/apps4web.de/fullchain.pem
-   Your key file has been saved at:
-   /etc/letsencrypt/live/apps4web.de/privkey.pem
-   Your cert will expire on 2020-06-19. To obtain a new or tweaked
-   version of this certificate in the future, simply run certbot again
-   with the "certonly" option. To non-interactively renew *all* of
-   your certificates, run "certbot renew"
- - Your account credentials have been saved in your Certbot
-   configuration directory at /etc/letsencrypt. You should make a
-   secure backup of this folder now. This configuration directory will
-   also contain certificates and private keys obtained by Certbot so
-   making regular backups of this folder is ideal.
- - If you like Certbot, please consider supporting our work by:
 
-   Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
-   Donating to EFF:                    https://eff.org/donate-le
+- Congratulations! Your certificate and chain have been saved at:
+  /etc/letsencrypt/live/apps4web.de/fullchain.pem
+  Your key file has been saved at:
+  /etc/letsencrypt/live/apps4web.de/privkey.pem
+  Your cert will expire on 2020-06-19. To obtain a new or tweaked
+  version of this certificate in the future, simply run certbot again
+  with the "certonly" option. To non-interactively renew *all* of
+  your certificates, run "certbot renew"
+- Your account credentials have been saved in your Certbot
+  configuration directory at /etc/letsencrypt. You should make a
+  secure backup of this folder now. This configuration directory will
+  also contain certificates and private keys obtained by Certbot so
+  making regular backups of this folder is ideal.
+- If you like Certbot, please consider supporting our work by:
+
+  Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
+  Donating to EFF:                    https://eff.org/donate-le
