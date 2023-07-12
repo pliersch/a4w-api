@@ -15,8 +15,8 @@ export class AppController {
   }
 
   @Get()
-  getNestMessage(): string {
-    return this.appService.getNestMessage();
+  getNestMessage(): any {
+    return {'msg': this.appService.getNestMessage()};
   }
 
   private init() {

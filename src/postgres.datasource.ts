@@ -8,7 +8,7 @@ import { DataSource } from "typeorm"
 export async function getPostgresDataSource(): Promise<DataSource> {
   const PostgresDataSource = new DataSource({
     type: 'postgres',
-    host: 'localhost',
+    host: '127.0.0.1',
     port: 5432,
     username: 'postgres',
     password: 'Pinscher',

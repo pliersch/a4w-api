@@ -20,13 +20,18 @@ async function bootstrap() {
   let port = 3000;
 
   if (process.env.NODE_ENV === 'production') {
-    origin = 'http://localhost:4300';
+    origin = 'http://127.0.0.1:4300';
     port = 3300;
   }
 
+  console.log('ENV: ', process.env.NODE_ENV)
+  console.log('origin: ', origin)
+  console.log('port: ', port)
+
   app.enableCors({credentials: true, origin: origin});
   // app.useWebSocketAdapter(new A4WAdapter(app));
-  await app.listen(port);
+  // await app.listen(port);
+  await app.listen(port, '0.0.0.0');
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 

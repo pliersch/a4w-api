@@ -20,7 +20,7 @@ SSH key fingerprints:
 256 MD5:2b:d9:eb:91:b8:f0:b7:63:da:8b:79:86:47:ca:7a:b5 (ED25519)
 
 **User**  
-hourby pw: foo
+postgres pw:Pinscher
 pliersch pw:foo
 patrick 1q2w3e4r
 
@@ -100,6 +100,8 @@ Remove an nginx Config from Sites-Enabled
 `sudo rm your-site-config`
 `sudo service nginx reload`
 
+`sudo systemctl restart nginx`
+
 NodeJS
 https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-debian-10
 
@@ -130,7 +132,7 @@ Setting Up Nginx as a Reverse Proxy Server
 `server {
 ...
 location / {
-proxy_pass http://localhost:3000;
+proxy_pass http://127.0.0.1:3000;
 proxy_http_version 1.1;
 proxy_set_header Upgrade $http_upgrade;
 proxy_set_header Connection 'upgrade';
@@ -143,6 +145,9 @@ proxy_cache_bypass $http_upgrade;
 PostrGres
 
 `apt install postgresql postgresql-client`
+change password:
+`sudo -u postgres psql`
+`\password postgres`
 
 MongoDB
 https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/
