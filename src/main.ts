@@ -30,7 +30,6 @@ async function bootstrap() {
 
   app.enableCors({credentials: true, origin: origin});
   // app.useWebSocketAdapter(new A4WAdapter(app));
-  // await app.listen(port);
   await app.listen(port, '0.0.0.0');
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
