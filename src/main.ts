@@ -4,6 +4,14 @@ import * as fs from "fs";
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  if (process.env.NODE_ENV === 'production') {
+    await httpsBootstrap()
+  } else {
+    await httpBootstrap()
+  }
+}
+
+async function httpsBootstrap() {
 
   const privateKey = fs.readFileSync('/etc/letsencrypt/live/apps4web.de/privkey.pem', 'utf8');
   const certificate = fs.readFileSync('/etc/letsencrypt/live/apps4web.de/cert.pem', 'utf8');
@@ -44,6 +52,30 @@ async function bootstrap() {
   app.enableCors({credentials: true, origin: origin});
   // app.useWebSocketAdapter(new A4WAdapter(app));
   await app.listen(3300, '0.0.0.0');
+  console.log(`Application is running on: ${await app.getUrl()}`);
+}
+
+async function httpBootstrap() {
+  const app = await NestFactory.create(AppModule, {
+    logger: console
+  });
+
+  const options = new DocumentBuilder()
+    .setTitle('A4W')
+    // .setDescription('The description')
+    .setVersion('1.0')
+    .addTag('a4w')
+    .build();
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('api', app, document);
+
+  let origin = 'http://localhost:4200';
+  let port = 3000;
+
+  app.enableCors({credentials: true, origin: origin});
+  // app.useWebSocketAdapter(new A4WAdapter(app));
+  // await app.listen(port);
+  await app.listen(port, '0.0.0.0');
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 

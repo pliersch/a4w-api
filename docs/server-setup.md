@@ -21,8 +21,6 @@ SSH key fingerprints:
 
 **User**  
 postgres pw:Pinscher
-pliersch pw:foo
-patrick 1q2w3e4r
 
 **System updaten**  
 `sudo apt-get update`  
@@ -117,12 +115,14 @@ Yarn
 
 PM2
 `sudo npm install pm2 -g`
-`pm2 start hello.js` (hello.js is entry point of example)
-`pm2 startup`
-`systemctl status pm2-root.service`
+`pm2 start "npm run start:prod" --name a4w-api`
+`pm2 start "http-server ./dist/apps4web --port 4300" --name a4w`
+(`pm2 start "npm run serve:build" --name a4w`) lite server
+`pm2 startup` ???
+`systemctl status`
 Samples
 `pm2 stop app_name_or_id`
-`pm2 restart app_name_or_id`
+`pm2 restart app_name_or_id` oder `pm2 restart app1 app2 app3` oder `pm2 restart all`
 `pm2 list`
 `pm2 info app_name`
 `pm2 monit`
@@ -142,7 +142,7 @@ proxy_cache_bypass $http_upgrade;
 ...
 }`
 
-PostrGres
+PostGres
 
 `apt install postgresql postgresql-client`
 change password:

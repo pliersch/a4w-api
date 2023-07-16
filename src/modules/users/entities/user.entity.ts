@@ -4,9 +4,9 @@ import { Photo } from "@modules/photos/entites/photo.entity";
 import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 
 export enum Role {
-  Admin,
+  Guest,
   User,
-  Guest
+  Admin
 }
 
 export enum Status {
