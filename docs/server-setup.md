@@ -88,6 +88,7 @@ https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-debian-
 `sudo service apache2 stop`
 `sudo apt-get install nginx`
 `sudo systemctl enable nginx`
+`sudo systemctl restart nginx`
 `sudo service nginx configtest` (test config)
 oder `sudo nginx -t -c /etc/nginx/nginx.conf`
 `cp /etc/nginx/sites-available/default /etc/nginx/sites-available/YOUR_SITE` duplicate default config  
@@ -96,9 +97,6 @@ oder `sudo nginx -t -c /etc/nginx/nginx.conf`
 Remove an nginx Config from Sites-Enabled
 `cd /etc/nginx/sites-enabled`
 `sudo rm your-site-config`
-`sudo service nginx reload`
-
-`sudo systemctl restart nginx`
 
 NodeJS
 https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-debian-10
