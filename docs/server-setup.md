@@ -120,6 +120,8 @@ PM2
 `systemctl status`
 Samples
 `pm2 stop app_name_or_id`
+`pm2 delete app_name_or_id`
+
 `pm2 restart app_name_or_id` oder `pm2 restart app1 app2 app3` oder `pm2 restart all`
 `pm2 list`
 `pm2 info app_name`
