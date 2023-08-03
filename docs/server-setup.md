@@ -72,6 +72,7 @@ UsePAM yes
 `sudo systemctl reload sshd`
 
 **UFW Firewall**
+https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-with-ufw-on-ubuntu-20-04-de
 `apt update`
 `apt install ufw`
 `ufw allow OpenSSH`
@@ -113,9 +114,9 @@ Yarn
 
 PM2
 `sudo npm install pm2 -g`
-`pm2 start "npm run start:prod" --name a4w-api`
-`pm2 start "http-server ./dist/apps4web --port 4300" --name a4w`
-(`pm2 start "npm run serve:build" --name a4w`) lite server
+a4w: `pm2 start "http-server ./dist/apps4web --port 4300" --name a4w`
+nicht mehr :(`pm2 start "npm run serve:build" --name a4w`) lite server
+api `pm2 start "npm run start:prod" --name a4w-api`
 `pm2 startup` ???
 `systemctl status`
 Samples
