@@ -1,3 +1,4 @@
+import { EmailLogin } from "@modules/users/dto/user.dto";
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { Role, Status, User } from './entities/user.entity';
 import { UsersService } from './users.service';
@@ -33,7 +34,12 @@ export class UsersController {
   }
 
   @Post('login')
-  async login(@Body() {id}: any) {
+  async loginWithEmail(@Body() data: EmailLogin) {
+    return this.usersService.findByEmail(data);
+  }
+
+  @Post('login-id')
+  async loginWithId(@Body() {id}: any) {
     return this.usersService.findById(id);
   }
 

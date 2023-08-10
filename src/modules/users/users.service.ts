@@ -1,3 +1,5 @@
+import { EmailLogin } from "@modules/users/dto/user.dto";
+import { findUserByEmail } from "@modules/users/find-options";
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -39,6 +41,15 @@ export class UsersService {
 
   async findById(id: string): Promise<User> {
     return this.repository.findOneBy({id: id});
+  }
+
+  // this is a temporary solution/hack for presentation
+  async findByEmail(data: EmailLogin): Promise<User> {
+    if (data.password == '..,-fidM') {
+      return this.repository.findOne(findUserByEmail(data.email));
+    } else {
+      return null;
+    }
   }
 
   async update(id: string, user: User) {
