@@ -1,8 +1,6 @@
-import { EmailLogin } from "@modules/users/dto/user.dto";
-import { findUserByEmail } from "@modules/users/find-options";
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { Role, Status, User } from './entities/user.entity';
 
 @Injectable()
@@ -13,43 +11,16 @@ export class UsersService {
     private readonly repository: Repository<User>,
   ) { }
 
-  async signin(user: User): Promise<User | undefined> {
-    const res = this.repository.findOneBy({email: user.email});
-    res.then(val => {
-      val.lastLogin = new Date();
-      this.repository.save(val);
-    })
-    return res;
-  }
-
-  async login(id: string): Promise<User | undefined> {
-    const res = this.repository.findOneBy({id: id});
-    res.then(val => {
-      val.lastLogin = new Date();
-      this.repository.save(val);
-    })
-    return res;
-  }
-
   async create(user: User): Promise<User> {
-    return await this.repository.save(user);
+    return this.repository.save(user);
+  }
+
+  async findOne(option: FindOptionsWhere<User>): Promise<User> {
+    return this.repository.findOneBy(option);
   }
 
   async findAll(): Promise<User[]> {
-    return await this.repository.find();
-  }
-
-  async findById(id: string): Promise<User> {
-    return this.repository.findOneBy({id: id});
-  }
-
-  // this is a temporary solution/hack for presentation
-  async findByEmail(data: EmailLogin): Promise<User> {
-    if (data.password == '..,-fidM') {
-      return this.repository.findOne(findUserByEmail(data.email));
-    } else {
-      return null;
-    }
+    return this.repository.find();
   }
 
   async update(id: string, user: User) {
