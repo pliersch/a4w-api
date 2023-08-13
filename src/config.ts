@@ -1,3 +1,4 @@
+import { Visit } from "@modules/admin/visits/entities/visit.entity";
 import { Message } from "@modules/chat/message.entity";
 import { Photo } from "@modules/photos/entites/photo.entity";
 import { TagGroup } from "@modules/tags/entities/tag-group.entity";
@@ -19,7 +20,7 @@ export const config: AppConfiguration = {
     username: process.env.POSTGRES_USER || 'postgres',
     password: process.env.POSTGRES_PASSWORD || 'Pinscher',
     database: process.env.POSTGRES_DB || 'a4w',
-    entities: [User, Photo, Tag, TagGroup, Message],
+    entities: [User, Photo, Tag, TagGroup, Message, Visit],
     // todo re-enable (doesn't works) since package updates
     // entities: [path.resolve(__dirname, '**/*.entity{.ts,.js}')],
     synchronize: true,

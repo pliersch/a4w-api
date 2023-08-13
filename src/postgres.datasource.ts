@@ -1,3 +1,4 @@
+import { Visit } from "@modules/admin/visits/entities/visit.entity";
 import { Message } from "@modules/chat/message.entity";
 import { Photo } from "@modules/photos/entites/photo.entity";
 import { TagGroup } from "@modules/tags/entities/tag-group.entity";
@@ -13,7 +14,7 @@ export async function getPostgresDataSource(): Promise<DataSource> {
     username: 'postgres',
     password: 'Pinscher',
     database: 'a4w',
-    entities: [User, Photo, Tag, TagGroup, Message]
+    entities: [User, Photo, Tag, TagGroup, Message, Visit]
     // todo re-enable (doesn't works)
     // entities: [__dirname + '**/*.entity{.ts,.js}'],
   })

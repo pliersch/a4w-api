@@ -1,3 +1,4 @@
+import { VisitsModule } from '@modules/admin/visits/visits.module';
 import { ChatModule } from "@modules/chat/chat.module";
 import { DownloadModule } from "@modules/download/download.module";
 import { PhotosModule } from "@modules/photos/photos.module";
@@ -15,13 +16,14 @@ import * as configuration from "./config/config.develop";
 
 @Module({
   imports: [
+    VisitsModule,
     PhotosModule,
     UsersModule,
     ChatModule,
     TagsModule,
-    DownloadModule,
     // SocketModule,
     // ConfigModule.forRoot({isGlobal: true, load: [configuration]}),
+    DownloadModule,
     SharpModule,
     TypeOrmModule.forRoot(config.database),
     ServeStaticModule.forRoot({
