@@ -30,7 +30,7 @@ export class PhotosService {
   async getMetaData(): Promise<PhotoMetaDataDto> {
     const dataSource = await getPostgresDataSource();
     const allPhotosCount = await this.photoRepository.count();
-    const tagRepository = await dataSource.manager.getRepository(Tag);
+    const tagRepository = dataSource.manager.getRepository(Tag);
     const tags = await tagRepository.find();
     const tagCounts: PhotoCountByTag[] = [];
     let count: number;

@@ -22,6 +22,7 @@ export class Photo extends BaseEntity {
   user: User
 
   @ManyToMany(() => Tag, (tag) => tag.photos, {
+    onDelete: "CASCADE",
     cascade: ["insert", "remove", "soft-remove"],
   })
   @JoinTable()

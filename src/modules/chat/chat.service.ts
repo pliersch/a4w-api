@@ -1,7 +1,6 @@
 import { QueryMessagesDto } from "@modules/chat/chat.model";
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { diskStorage } from "multer";
 
 import { Repository, UpdateResult } from 'typeorm';
 import { Message } from './message.entity';
