@@ -144,7 +144,7 @@ export class PhotosService {
     return this.photoRepository.remove(photo);
   }
 
-  deleteAll() {
+  deleteAll(): Promise<DeleteResult> {
     return this.photoRepository.delete({});
   }
 

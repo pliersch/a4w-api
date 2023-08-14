@@ -17,6 +17,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { Express } from "express";
 import { diskStorage } from "multer";
 import { Observable, Subject } from "rxjs";
+import { DeleteResult } from "typeorm";
 import { getPostgresDataSource } from "../../postgres.datasource";
 import { ChatService } from './chat.service';
 import { Message } from './message.entity';
@@ -72,6 +73,11 @@ export class ChatController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.service.removeOne(id);
+  }
+
+  @Post('deleteAll')
+  async deleteAll(): Promise<DeleteResult> {
+    return this.service.deleteAll();
   }
 
   // body is type 'any' because we must parse the json string :(

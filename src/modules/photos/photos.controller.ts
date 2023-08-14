@@ -119,12 +119,12 @@ export class PhotosController {
   }
 
   @Post('deleteAll')
-  async deleteAll(@Body() dto: { key: string, user: User }): Promise<void> {
+  async deleteAll(@Body() dto: { key: string, user: User }): Promise<DeleteResult> {
     if (dto.key !== DELETE_ALL_KEY && dto.user.role !== Role.Admin) {
       console.log('PhotosController deleteAll: DELETE ALL PHOTOS NOT ALLOWED', dto);
     }
-    await this.photoService.deleteAll();
     this.fileService.deleteAllPhotos();
+    return this.photoService.deleteAll();
   }
 
   // only used with upload
