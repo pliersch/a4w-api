@@ -45,6 +45,8 @@ export class PhotoCountByTagImpl implements PhotoCountByTag {
   }
 }
 
+export type FindOption = 'Newest' | 'BestRated' | 'MostViewed';
+
 export interface PhotoMetaDataDto {
   allPhotosCount: number;
   photoCountByTags: PhotoCountByTag[];
