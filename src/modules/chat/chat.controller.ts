@@ -1,18 +1,7 @@
 import { CreateMessageDto, QueryMessagesDto } from "@modules/chat/chat.model";
+import { PictureFileService } from "@modules/photos/picture-file.service";
 import { User } from "@modules/users/entities/user.entity";
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-  Sse,
-  UploadedFile,
-  UseInterceptors
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Sse, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Express } from "express";
 import { diskStorage } from "multer";
@@ -25,7 +14,8 @@ import { Message } from './message.entity';
 @Controller('chat')
 export class ChatController {
 
-  constructor(private readonly service: ChatService) { }
+  constructor(private readonly service: ChatService,
+              private fileService: PictureFileService) { }
 
   // server sent MUST BE UNDER CONSTRUCTOR. OTHERWISE, A TYPEORM ERROR WILL THROW
   @Sse('sse')
@@ -42,7 +32,7 @@ export class ChatController {
   @Post()
   async create(@Body() dto: CreateMessageDto) {
     const dataSource = await getPostgresDataSource();
-    const userRepository = await dataSource.manager.getRepository(User);
+    const userRepository = dataSource.manager.getRepository(User);
     const user = await userRepository.findOneBy({id: dto.userId});
     const msg: Message = new Message();
     msg.text = dto.text;
@@ -65,18 +55,19 @@ export class ChatController {
     return this.service.findAll(dto);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() message: Message) {
-    return this.service.update(/*id,*/ message);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.service.removeOne(id);
-  }
+  // @Put(':id')
+  // update(@Param('id') id: string, @Body() message: Message) {
+  //   return this.service.update(/*id,*/ message);
+  // }
+  //
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.service.removeOne(id);
+  // }
 
   @Post('deleteAll')
   async deleteAll(): Promise<DeleteResult> {
+    this.fileService.clearFolder('chat');
     return this.service.deleteAll();
   }
 
@@ -85,17 +76,14 @@ export class ChatController {
   @Post('pictures')
   async uploadFile(@Body() dto: any, @UploadedFile() file: Express.Multer.File) {
     const dataSource = await getPostgresDataSource();
-    const userRepository = await dataSource.manager.getRepository(User);
+    const userRepository = dataSource.manager.getRepository(User);
     const user = await userRepository.findOneBy({id: dto.userId});
     const msg: Message = new Message();
     msg.text = dto.text;
     msg.user = user;
     msg.fileNames = [file.filename];
     const message = await this.service.create(msg);
-
-    // todo thumbs
-    // await this.fileService.createThumb(photo.fileName);
-    // don't send user obj, only user id.
+    // todo check why use findOne
     const payload = await this.service.findOne(message.id);
     const event = {
       data: {
@@ -103,16 +91,17 @@ export class ChatController {
         payload: payload
       }
     };
+    await this.fileService.savePicture(file.filename, 'chat', [300]);
     setTimeout(() => this.sendEvent(event as MessageEvent), 300);
     return message;
   }
 }
 
-// todo duplicated (PhotosController) create a service?!
+// todo duplicated (PhotosController) -> dont use multer, use PictureFileService
 function createMulterStorage() {
   return {
     storage: diskStorage({
-      destination: './static/images/chat',
+      destination: './static/images/chat/full',
       filename: function (req, file, cb) {
         const extension = file.originalname.substring(file.originalname.lastIndexOf('.'));
         cb(null, file.fieldname + '-' + Date.now() + extension);

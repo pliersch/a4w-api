@@ -3,22 +3,26 @@ import * as fs from 'fs'
 import { SharpService } from "nestjs-sharp";
 import * as path from "path";
 
-@Injectable()
-export class PhotoFileService {
+export type ThumbSize = 300 | 600 | 900
 
-  private readonly sizes = [300, 600, 900, 1800];
+@Injectable()
+export class PictureFileService {
+
+  // private readonly sizes = [300, 600, 900, 1800];
+  private readonly filePath = './static/images/';
+  private readonly original = 'full/';
+  private readonly thumbs = 'thumbs/';
   private readonly pathFull = './static/images/gallery/full/';
   private readonly pathThumbs = './static/images/gallery/thumbs/';
 
   constructor(private sharpService: SharpService) { }
 
-  async createThumb(fileName: string/*, inputDirectory?: string, outputDirectory?: string*/): Promise<void> {
+  async savePicture(fileName: string, folderName: string, sizes: ThumbSize[]): Promise<void> {
     const promises = [];
-    // const input = inputDirectory ? inputDirectory + fileName : path.resolve(this.pathFull);
-    // const output = outputDirectory ? outputDirectory : path.resolve(this.pathThumbs);
-    const input = path.resolve(this.pathFull);
-    const output = path.resolve(this.pathThumbs);
-    const sizes = this.sizes;
+
+    const input = path.resolve(this.filePath + folderName + '/' + this.original);
+    const output = path.resolve(this.filePath + folderName + '/' + this.thumbs);
+
     try {
       for (const size of sizes) {
         const webpFile = path.basename(fileName, path.extname(fileName)) + '-' + size + '.webp';
@@ -54,18 +58,20 @@ export class PhotoFileService {
     }
   }
 
-  deletePhoto(fileName: string): void {
+  deletePhoto(fileName: string, sizes: ThumbSize[]): void {
     this.deleteFile(this.pathFull, fileName);
     const name = fileName.substring(0, fileName.lastIndexOf('.'));
-    const sizes = this.sizes;
     for (const size of sizes) {
       const thumbName = name + '-' + size + '.webp';
       this.deleteFile(this.pathThumbs, thumbName);
     }
   }
 
-  deleteAllPhotos(): void {
-    const directories = [this.pathFull, this.pathThumbs];
+  clearFolder(folderName: string): void {
+    const original = this.filePath + folderName + '/' + this.original;
+    const thumbs = this.filePath + folderName + '/' + this.thumbs;
+    const directories = [original, thumbs];
+
     directories.forEach(directory => {
       fs.readdir(directory, (err, files) => {
         if (err) {

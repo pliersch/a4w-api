@@ -29,8 +29,8 @@ import { Observable, Subject } from "rxjs";
 import { DeleteResult, In } from "typeorm";
 import { getPostgresDataSource } from "../../postgres.datasource";
 import { Photo } from './entites/photo.entity';
-import { PhotoFileService } from "./photo-file.service";
 import { PhotosService } from './photos.service';
+import { PictureFileService } from "./picture-file.service";
 
 const DELETE_ALL_KEY = 'very_special_key';
 
@@ -38,7 +38,7 @@ const DELETE_ALL_KEY = 'very_special_key';
 export class PhotosController {
 
   constructor(private photoService: PhotosService,
-              private fileService: PhotoFileService) {
+              private fileService: PictureFileService) {
   }
 
   // server sent MUST BE UNDER CONSTRUCTOR. OTHERWISE, A TYPEORM ERROR WILL THROW
@@ -77,7 +77,7 @@ export class PhotosController {
   async update(@Param('id') id: string, @Body() dto: UpdatePhotoDto) {
     const photo = await this.photoService.findOneWithTags(id);
     const dataSource = await getPostgresDataSource();
-    const tagRepository = await dataSource.manager.getRepository(Tag);
+    const tagRepository = dataSource.manager.getRepository(Tag);
     if (dto.addedTagIds || dto.removedTagIds) {
       const removedTags = await tagRepository.findBy({
         id: In(dto.removedTagIds)
@@ -100,7 +100,7 @@ export class PhotosController {
   @Delete(':id')
   async deleteOne(@Param('id') id: string): Promise<DeletePhotoResultDto> {
     const photo = await this.photoService.removeOne(id);
-    this.fileService.deletePhoto(photo.fileName);
+    this.fileService.deletePhoto(photo.fileName, [300, 600, 900]);
     return new Promise(function (resolve) {
       resolve({id: id});
     });
@@ -123,7 +123,7 @@ export class PhotosController {
     if (dto.key !== DELETE_ALL_KEY && dto.user.role !== Role.Admin) {
       console.log('PhotosController deleteAll: DELETE ALL PHOTOS NOT ALLOWED', dto);
     }
-    this.fileService.deleteAllPhotos();
+    this.fileService.clearFolder('gallery');
     return this.photoService.deleteAll();
   }
 
@@ -144,7 +144,7 @@ export class PhotosController {
     photo.isPrivate = JSON.parse(body.isPrivate);
     photo.user = await dataSource.manager.findOneBy(User, {id: body.userid});
     photo.fileName = file.filename;
-    await this.fileService.createThumb(photo.fileName);
+    await this.fileService.savePicture(photo.fileName, 'gallery', [300, 600, 900]);
     const promise = this.photoService.create(photo);
     setTimeout(() => this.sendEvent({data: {type: 'photo_added'}} as MessageEvent), 300);
     return promise;
