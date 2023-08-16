@@ -153,7 +153,7 @@ export class PhotosService {
   }
 
   private async queryPhotoCountOfTag(tagRepository: Repository<Tag>, tagId: string): Promise<number> {
-    return await tagRepository.createQueryBuilder('tag')
+    return tagRepository.createQueryBuilder('tag')
       .leftJoinAndSelect("tag.photos", "photo")
       .where("tag.id = :id", {id: tagId})
       .getOne().then(tag => tag.photos.length);

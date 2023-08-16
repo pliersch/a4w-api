@@ -13,11 +13,11 @@ export class TagGroupService {
   ) {}
 
   async create(group: TagGroup): Promise<TagGroup> {
-    return await this.groupRepository.save(group);
+    return this.groupRepository.save(group);
   }
 
   async findAll(): Promise<TagGroup[]> {
-    return await this.groupRepository.find({
+    return this.groupRepository.find({
       select: {
         id: true,
         name: true,

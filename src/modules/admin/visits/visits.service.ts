@@ -14,20 +14,20 @@ export class VisitsService {
   }
 
   async create(dto: CreateVisitDto): Promise<Visit> {
-    return await this.repository.save(dto);
+    return this.repository.save(dto);
   }
 
   findAll(): Promise<Visit[]> {
     return this.repository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} admin`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} admin`;
-  }
+  // findOne(id: number) {
+  //   return `This action returns a #${id} admin`;
+  // }
+  //
+  // remove(id: number) {
+  //   return `This action removes a #${id} admin`;
+  // }
 
   deleteAll() {
     return this.repository.delete({});
