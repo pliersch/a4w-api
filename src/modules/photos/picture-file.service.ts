@@ -8,7 +8,6 @@ export type ThumbSize = 300 | 600 | 900
 @Injectable()
 export class PictureFileService {
 
-  // private readonly sizes = [300, 600, 900, 1800];
   private readonly filePath = './static/images/';
   private readonly original = 'full/';
   private readonly thumbs = 'thumbs/';
@@ -18,43 +17,45 @@ export class PictureFileService {
   constructor(private sharpService: SharpService) { }
 
   async savePicture(fileName: string, folderName: string, sizes: ThumbSize[]): Promise<void> {
-    const promises = [];
+    const promises: Promise<boolean>[] = [];
 
-    const input = path.resolve(this.filePath + folderName + '/' + this.original);
-    const output = path.resolve(this.filePath + folderName + '/' + this.thumbs);
+    const input: string = path.resolve(this.filePath + folderName + '/' + this.original);
+    const output: string = path.resolve(this.filePath + folderName + '/' + this.thumbs);
 
     try {
       for (const size of sizes) {
-        const webpFile = path.basename(fileName, path.extname(fileName)) + '-' + size + '.webp';
-        const toPath = path.join(output, webpFile);
-        const fromPath = path.join(input, fileName);
+        const webpFile: string = path.basename(fileName, path.extname(fileName)) + '-' + size + '.webp';
+        const toPath: string = path.join(output, webpFile);
+        const fromPath: string = path.join(input, fileName);
         promises.push(this.generate(fromPath, toPath, size));
       }
     } catch (e) {
       console.error("We've thrown! Whoops!", e);
     }
-    Promise.all(promises)
-      .then(() => {
-        return 1;
-      })
-      .catch((e) => {
-        console.log('PhotosProcessor error: ',)
-      });
+    await Promise.all(promises);
+    return;
   }
 
-  private async generate(inputPath: string, outputPath: string, width: number): Promise<void> {
-    const image = await this.sharpService.edit(inputPath);
-    const metadata = await image.metadata()
+  private async generate(inputPath: string, outputPath: string, width: number): Promise<boolean> {
+    const sharp = await this.sharpService.edit(inputPath);
+    const metadata = await sharp.metadata()
     if (metadata.width * 0.9 < width) { // no thumbs when source is too small. scale up 10% on site is ok
       return new Promise(function (resolve) {
-        resolve();
+        resolve(true);
       });
     } else {
-      await image.resize(width).toFile(outputPath, (err, info) => {
-        if (err) {
-          console.log('PhotoProcessorService generate err: ', err)
-        }
-      });
+      try {
+        await sharp.resize(width).toFile(outputPath);
+        return new Promise(function (resolve) {
+          resolve(true);
+        });
+      } catch (e) {
+        console.log('PictureFileService generate error: ', e)
+        return new Promise(function (resolve) {
+          resolve(false);
+        });
+      }
+
     }
   }
 
@@ -65,6 +66,11 @@ export class PictureFileService {
       const thumbName = name + '-' + size + '.webp';
       this.deleteFile(this.pathThumbs, thumbName);
     }
+  }
+
+  private deleteFile(path: string, fileName: string): void {
+    fs.unlink(path + fileName,
+      res => console.error('error: ', res));
   }
 
   clearFolder(folderName: string): void {
@@ -88,8 +94,4 @@ export class PictureFileService {
     })
   }
 
-  private deleteFile(path: string, fileName: string): void {
-    fs.unlink(path + fileName,
-      res => console.error('error: ', res));
-  }
 }

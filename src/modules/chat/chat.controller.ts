@@ -15,7 +15,7 @@ import { Message } from './message.entity';
 export class ChatController {
 
   constructor(private readonly service: ChatService,
-              private fileService: PictureFileService) { }
+              private pictureService: PictureFileService) { }
 
   // server sent MUST BE UNDER CONSTRUCTOR. OTHERWISE, A TYPEORM ERROR WILL THROW
   @Sse('sse')
@@ -67,7 +67,7 @@ export class ChatController {
 
   @Post('deleteAll')
   async deleteAll(): Promise<DeleteResult> {
-    this.fileService.clearFolder('chat');
+    this.pictureService.clearFolder('chat');
     return this.service.deleteAll();
   }
 
@@ -91,7 +91,8 @@ export class ChatController {
         payload: payload
       }
     };
-    await this.fileService.savePicture(file.filename, 'chat', [300]);
+    await this.pictureService.savePicture(file.filename, 'chat', [300]);
+    // todo why timeout
     setTimeout(() => this.sendEvent(event as MessageEvent), 300);
     return message;
   }

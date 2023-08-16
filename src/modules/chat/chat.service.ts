@@ -16,11 +16,11 @@ export class ChatService {
   }
 
   async create(message: Message): Promise<Message> {
-    return await this.repository.save(message);
+    return this.repository.save(message);
   }
 
   async findAll(dto: QueryMessagesDto): Promise<Message[]> {
-    return await this.repository.find({
+    return this.repository.find({
       select: {
         user: {
           id: true,
@@ -40,7 +40,7 @@ export class ChatService {
   }
 
   async findOne(id: string): Promise<Message> {
-    return await this.repository.findOne({
+    return this.repository.findOne({
       where: {
         id: id
       },
@@ -61,12 +61,12 @@ export class ChatService {
   }
 
   async update(message: Message): Promise<UpdateResult> {
-    return await this.repository.update(message.id, message);
+    return this.repository.update(message.id, message);
   }
 
   async removeOne(id: string): Promise<Message> {
     const message = await this.repository.findOneBy({id: id});
-    return await this.repository.remove(message);
+    return this.repository.remove(message);
   }
 
   deleteAll(): Promise<DeleteResult> {
