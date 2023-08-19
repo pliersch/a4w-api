@@ -1,6 +1,7 @@
 import { Visit } from "@modules/admin/visits/entities/visit.entity";
 import { EmailLogin } from "@modules/users/dto/user.dto";
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Sse } from '@nestjs/common';
+import { Observable, Subject } from "rxjs";
 import { getPostgresDataSource } from "../../postgres.datasource";
 import { Status, User } from './entities/user.entity';
 import { UsersService } from './users.service';
@@ -9,6 +10,18 @@ import { UsersService } from './users.service';
 export class UsersController {
 
   constructor(private readonly usersService: UsersService) { }
+
+  // server sent MUST BE UNDER CONSTRUCTOR. OTHERWISE, A TYPEORM ERROR WILL THROW
+  @Sse('sse')
+  sse(): Observable<MessageEvent> {
+    return this.changes$.asObservable();
+  }
+
+  private changes$: Subject<MessageEvent> = new Subject()
+
+  private sendEvent(event: MessageEvent) {
+    this.changes$.next(event)
+  }
 
   @Post()
   create(@Body() user: User) {
@@ -66,7 +79,14 @@ export class UsersController {
     await this.usersService.update(user.id, user);
     const dataSource = await getPostgresDataSource();
     const visitRepository = dataSource.manager.getRepository(Visit);
-    await visitRepository.save({email: user.email})
+    const visit = await visitRepository.save({email: user.email});
+    const event = {
+      data: {
+        type: 'visit_added',
+        payload: visit
+      }
+    };
+    setTimeout(() => this.sendEvent(event as MessageEvent), 300);
     return user;
   }
 

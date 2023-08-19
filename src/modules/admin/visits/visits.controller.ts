@@ -6,11 +6,8 @@ import { VisitsService } from './visits.service';
 export class VisitsController {
   constructor(private readonly visitsService: VisitsService) {}
 
-  // will create inside UserController when user login
   // @Post()
-  // create(@Body() dto: CreateVisitDto) {
-  //   return this.visitsService.create(dto);
-  // }
+  // will create inside UserController when user login
 
   @Get()
   findAll() {
