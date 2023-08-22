@@ -75,15 +75,21 @@ export class UsersController {
   }
 
   private async protocolLogin(user: User): Promise<User> {
-    user.lastLogin = new Date();
+    const login = new Date();
+    user.lastLogin = login;
     await this.usersService.update(user.id, user);
     const dataSource = await getPostgresDataSource();
     const visitRepository = dataSource.manager.getRepository(Visit);
-    const visit = await visitRepository.save({email: user.email});
+    await visitRepository.save({email: user.email});
+    const payload = {
+      userId: user.id,
+      email: user.email,
+      created: login
+    }
     const event = {
       data: {
         type: 'visit_added',
-        payload: visit
+        payload: payload
       }
     };
     setTimeout(() => this.sendEvent(event as MessageEvent), 300);
