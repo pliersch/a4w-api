@@ -146,7 +146,13 @@ export class PhotosController {
     photo.fileName = file.filename;
     await this.fileService.savePicture(photo.fileName, 'gallery', [300, 600, 900]);
     const promise = this.photoService.create(photo);
-    setTimeout(() => this.sendEvent({data: {type: 'photo_added'}} as MessageEvent), 300);
+    const event = {
+      data: {
+        type: 'photo_added',
+        payload: {userId: photo.user.id}
+      }
+    };
+    setTimeout(() => this.sendEvent(event as MessageEvent), 300);
     return promise;
   }
 }
