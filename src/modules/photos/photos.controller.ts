@@ -68,6 +68,11 @@ export class PhotosController {
     return this.photoService.findOne(id);
   }
 
+  @Get('file/:id')
+  async findOneByFileName(@Param('id') id: string): Promise<Photo> {
+    return this.photoService.findOneByFileName(id);
+  }
+
   @Put(':id')
   async replace(@Param('id') id: string, @Body() photo: Photo) {
     return this.photoService.replace(/*+id, */photo);

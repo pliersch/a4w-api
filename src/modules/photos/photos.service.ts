@@ -123,6 +123,10 @@ export class PhotosService {
     return this.photoRepository.findOneBy({id: id});
   }
 
+  async findOneByFileName(fileName: string): Promise<Photo> {
+    return this.photoRepository.findOneBy({fileName: fileName});
+  }
+
   /**
    * will use to update tags
    */
