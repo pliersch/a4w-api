@@ -69,8 +69,8 @@ async function httpBootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
 
-  let origin = 'http://localhost:4200';
-  let port = 3000;
+  const origin = 'http://localhost:4200';
+  const port = 3000;
 
   app.enableCors({credentials: true, origin: origin});
   // app.useWebSocketAdapter(new A4WAdapter(app));
