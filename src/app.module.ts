@@ -12,7 +12,6 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { config } from './config';
-import * as configuration from "./config/config.develop";
 
 @Module({
   imports: [
@@ -34,15 +33,12 @@ import * as configuration from "./config/config.develop";
   providers: [AppService/*, SocketGateway*/],
 })
 
-export class AppModule {
-}
+export class AppModule {}
 
-// TODO complete env task! look in main.ts
-// https://stackoverflow.com/questions/67166620/how-to-get-values-from-custom-configuration-file-in-nestjs-with-interface
-function envConfig() {
-  if (process.env.NODE_ENV === 'production') {
-    // returns develop at the moment
-    return configuration;
-  }
-  return configuration;
-}
+// function envConfig() {
+//   if (process.env.NODE_ENV === 'production') {
+//     // returns develop at the moment
+//     return configuration;
+//   }
+//   return configuration;
+// }
