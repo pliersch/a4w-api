@@ -40,7 +40,7 @@ export class UsersController {
   // this is a temporary solution/hack for presentation
   @Post('login')
   async loginWithEmail(@Body() data: EmailLogin) {
-    if (data.password !== '..,-fidM') {
+    if (data.password !== 'a4w2024!') {
       return null;
     }
     const user = await this.usersService.findOne({email: data.email});
